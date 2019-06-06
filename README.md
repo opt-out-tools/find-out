@@ -67,6 +67,11 @@ The naming convention is: `action_model_datasetname.py`
 For example, if I have written a script that will train a neural net using the dataset called datazet, the naming convention would be:
 train_nn_datazet.py
 
-Please follow the example in the repository if you're stuck
+Please follow the example in the repository if you're stuck, to run the tests for the example:
+
+``` 
+cd find-out
+python -m pytest tests/test_nn_dataturks.py
+```
 
 NB. this is not a permanent solution but will enable initial effective collaboration. If you have any thoughts or ideas on how to improve this, just email opt.out.tool@gmail.com

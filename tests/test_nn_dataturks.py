@@ -2,7 +2,7 @@ from src.models import predict_nn_dataturks as model
 from src.data.preprocess.generate_nn_dataturks import split
 
 path_to_data = "/data/external/dataturks/example.csv"
-path_to_model = "models/simple_dataturks.h5"
+path_to_model = "models/example_dataturks.h5"
 
 
 def test_create_dictionary_vocab_size_is_correct(create_dataset_vocabulary):

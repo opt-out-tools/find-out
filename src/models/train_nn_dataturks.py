@@ -56,5 +56,5 @@ def build(self, path_to_data, text_column_name, label_column_name, hyperparamete
 
     import datetime as dt
     now = dt.datetime.now().__str__()
-    model.save(os.getcwd() + '/saved_model_data/models/model_' + now + '.h5')
+    model.save(os.getcwd() + '../models/dataturks ' + now + '.h5')
     print("Model saved.")

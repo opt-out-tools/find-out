@@ -1,25 +1,8 @@
-import os
-
-import pandas as pd
-import pytest
-
 from src.models import predict_nn_dataturks as model
-from src.data.preprocess.generate_nn_dataturks import create_dictionary, split
+from src.data.preprocess.generate_nn_dataturks import split
 
-
-
-path_to_data = "/../data/raw/dataturks/dataturks.csv"
-path_to_model = "../models/simple_dataturks.h5"
-
-@pytest.fixture(scope="module")
-def read_in_dataset():
-    return pd.read_csv(os.getcwd() + path_to_data)
-
-
-@pytest.fixture(scope="module")
-def create_dataset_vocabulary(read_in_dataset):
-    data = read_in_dataset
-    return create_dictionary(data['content'], 10000)
+path_to_data = "/data/external/dataturks/example.csv"
+path_to_model = "models/simple_dataturks.h5"
 
 
 def test_create_dictionary_vocab_size_is_correct(create_dataset_vocabulary):
@@ -49,7 +32,7 @@ def test_create_dictionary_removes_Unicode(create_dataset_vocabulary):
 
 # TODO finish adding a optimized test that will check ranking
 # def test_create_dictionary_most_common_word_correctly_ranked(create_dataset_vocabulary):
-#     data = pd.read_csv(os.getcwd() + "/data/dataturks/dataturks.csv")
+#     data = pd.read_csv(os.getcwd() + "/data/dataturks/example.csv")
 #     corpus = " ".join(data["content"]).split()
 #     counts = sorted([(word, corpus.count(word)) for word in set(corpus)], key=lambda t: t[1], reverse=True)
 #     print(counts[0])

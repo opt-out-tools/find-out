@@ -3,3 +3,5 @@ optout/
 find-out/
 src.egg-info/
 *_pycache__*
+Makefile
+docs/

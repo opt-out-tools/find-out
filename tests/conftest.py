@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 import os
-from src.data.preprocess.generate_nn_dataturks import create_dictionary
+from src.data.preprocess.dataturks.generate_nn_dataturks import create_dictionary
 
 @pytest.fixture(scope="module")
 def read_in_dataset():

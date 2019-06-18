@@ -1,5 +1,5 @@
 from src.models import predict_nn_dataturks as model
-from src.data.preprocess.generate_nn_dataturks import split
+from src.data.preprocess.dataturks.generate_nn_dataturks import split
 
 path_to_data = "/data/external/dataturks/example.csv"
 path_to_model = "models/example_dataturks.h5"

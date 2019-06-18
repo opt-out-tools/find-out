@@ -12,3 +12,7 @@ numpy==1.16.2
 hyperas==0.4.1
 hyperopt==0.1.2
 scikit_learn==0.21.0
+
+# metoo specific
+tweepy==3.7.0
+regex==2019.06.08

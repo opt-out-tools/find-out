@@ -38,7 +38,7 @@ Project Organization
     │   │
     │   ├── data           <- Scripts to download or generate data
     │   │   └── collect
-    |   |       └── collect_model_datasetname.py
+    |   |       └── get_model_datasetname.py
     |   |   └── preprocess
     |   |       └── preprocess_model_datasetname.py
     │   │

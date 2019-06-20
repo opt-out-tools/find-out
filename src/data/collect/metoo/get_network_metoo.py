@@ -62,18 +62,32 @@ def gather_tweets(api, path_to_ids, path_to_output):
                 print(str(id_of_tweet) + ' tweet does not exist anymore')
 
             if n % 1000 == 0:
-                write_to_disk(tweets, n, path_to_output)
+                if n == 0:
+                    write_to_disk(tweets, True, path_to_output)
+                else:
+                    print("here")
+                    write_to_disk(tweets, False, path_to_output)
+
                 counter +=len(tweets)
                 print(f"{counter} tweets have been saved to file")
                 tweets = []
 
 
-def write_to_disk(tweets, counter, path_to_output):
-    """
-    """
-    df = pd.DataFrame(tweets)
-    df.to_csv(path_to_output, mode="a", index=False, header=True)
+def write_to_disk(tweets, save_headers, path_to_output):
+    """ Writes the dataframe to a csv file, appending further tweets with the tweet object keys as columns,"""
+    tweet_object_keys = ['contributors', 'coordinates', 'entities',
+       'extended_entities', 'favorite_count', 'favorited', 'geo',
+       'id_str', 'in_reply_to_screen_name', 'in_reply_to_status_id',
+       'in_reply_to_status_id_str', 'in_reply_to_user_id',
+       'in_reply_to_user_id_str', 'is_quote_status', 'lang', 'place',
+       'possibly_sensitive', 'possibly_sensitive_appealable', 'quoted_status',
+       'quoted_status_id', 'quoted_status_id_str', 'retweet_count',
+       'retweeted', 'retweeted_status', 'source', 'truncated', 'user']
+
+    df = pd.DataFrame(tweets, columns = tweet_object_keys)
+    df.to_csv(path_to_output, mode="a", index=False, header=save_headers)
     print("Saved to file")
+
 
 
 
@@ -91,6 +105,13 @@ def test_raises_exception_if_incorrect_credentials():
     with pytest.raises(Exception) as e:
         create_twitter_API_connection({"CONSUMER_KEY" : "key", "CONSUMER_SECRET": "secret", "ACCESS_TOKEN": "token", "ACCESS_SECRET": "access_secret" })
     assert str(e.value) == "Failed to send request, invalid credentials."
+
+def test_api_call():
+    with mock.patch('tweepy.api') as mocked_tweepy:
+        gather_tweets(mocked_tweepy, "","")
+        mocked_tweepy.get_status.assert_called_once()
+
+
 
 
 

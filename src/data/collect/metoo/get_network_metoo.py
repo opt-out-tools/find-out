@@ -12,6 +12,7 @@ import tweepy
 @click.option("--path_to_output", "-o", required=True, help="path to where the tweets should be written to")
 def main(path_to_creds, path_to_ids, path_to_output):
     """ Runs the functions that enable tweets to be gathered by id and saved to csv. """
+
     credentials = read_json(path_to_creds)
 
     api = create_twitter_API_connection(credentials)
@@ -48,7 +49,8 @@ def create_twitter_API_connection(creds):
 
 
 def gather_tweets(api, path_to_ids, path_to_output, starting_id_idx=0):
-    """
+    """ Writes tweets returned from the /show/status API to csv file every 1000 API calls. If the tweet is not there
+        a message is displayed in the stdout.
     """
     ids = pd.read_csv(path_to_ids)
 

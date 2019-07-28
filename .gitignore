@@ -5,3 +5,4 @@ src.egg-info/
 *_pycache__*
 Makefile
 docs/
+.Rproj.user

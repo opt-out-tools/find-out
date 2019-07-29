@@ -77,4 +77,11 @@ labelled_tweets <- left_join(misogyny_data,
 labelled_tweets <- labelled_tweets %>% 
   drop_na(text)
 
-labelled_tweets %>% group_by(label) %>% count()
+# Balance label classes by taking random sample of not_misogynistic Tweets
+labelled_tweets <- labelled_tweets %>%
+  group_by(label) %>% 
+  sample_n(3468) %>%
+  ungroup()
+  
+# Save to csv
+write_csv(labelled_tweets, "zeerack_data.csv")

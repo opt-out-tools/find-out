@@ -1,7 +1,7 @@
-# Zeerack Data
+# Hate Spech Data
 
 ## Original Data
-This data comes from two of Zeerack's studies (see below for references). The data was originally split across four .json files comprised of Tweets and (some of) their associated meta-data, in addition to an annotation. These annotations are one of `"racism"`, `"Sexism"`, `"sexism"`, `"Both"`, `"none"`, or `"Neither"`.
+This data comes from two of Zeerak Waseems's studies (see below for references). The data was originally split across four .json files comprised of Tweets and (some of) their associated meta-data, in addition to an annotation. These annotations are one of `"racism"`, `"Sexism"`, `"sexism"`, `"Both"`, `"none"`, or `"Neither"`.
 
 ## Wrangled Data
 To format the data for use in Opt Out:  

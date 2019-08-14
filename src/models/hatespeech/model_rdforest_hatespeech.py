@@ -1,20 +1,28 @@
 import pandas as pd
+import numpy as np
 
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from src.data.preprocess.hatespeech.preprocess_rdforest_hatespeech import create_tfidf
-from src.features.hatespeech.featureseng_rdforest_hatespeech import get_length_of_tweet
+from src.data.preprocess.hatespeech.preprocess_rdforest_hatespeech import generate_tfidf_vectors
+from src.features.hatespeech.featureseng_rdforest_hatespeech import contains_not_sexist_but
 from src.utils.normalize import normalize
+
+def combine_feature_space(wordvecs, feature_to_add):
+    wordvecs = wordvecs.toarray()
+    feature_to_add = feature_to_add.reshape(len(wordvecs), 1)
+    return np.hstack((wordvecs,feature_to_add))
 
 data = pd.read_csv("../../../data/external/hatespeech/hs_data.csv")
 
 data['normalized'] = data['text'].apply(normalize)
+X = generate_tfidf_vectors(data['normalized'].to_list())['vectors']
 
-X = create_tfidf(data['normalized'].to_list())['vectors']
+data['contains_not_sexist_but'] = data['text'].apply(lambda tweet: contains_not_sexist_but(tweet))
+X = combine_feature_space(X, data['contains_not_sexist_but'].values)
+
 y = pd.get_dummies(data['annotation'])['misogynistic']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3) # 70% training and 30% test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
-from sklearn.ensemble import RandomForestClassifier
-#Create a Gaussian Classifier
 clf=RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
             max_depth=None, max_features='auto', max_leaf_nodes=None,
             min_impurity_decrease=0.0, min_impurity_split=None,
@@ -25,8 +33,7 @@ clf=RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
 
 clf.fit(X_train,y_train)
 
-# Feature importance
-feature_names = create_tfidf(data['normalized'].to_list())['feature_names']
+feature_names = generate_tfidf_vectors(data['normalized'].to_list())['feature_names'] + ['contains_not_sexist_but']
 feature_imp = pd.Series(clf.feature_importances_, index=feature_names).sort_values(ascending=False)
 
 y_pred=clf.predict(X_test)

@@ -1,8 +1,5 @@
 import re
 
-import numpy as np
-
-
 def escape_unicode(comment):
     """Returns a tokenized comment where the un-escaped unicode characters have been escaped."""
     return [word.encode('utf-8').decode('unicode_escape') if re.findall('\\\\\w+', word) != [] else word for word in

@@ -1,6 +1,6 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-def create_tfidf(corpus):
+def generate_tfidf_vectors(corpus):
     """Returns the tf-idf vector representations of documents.
     Args:
         corpus (list) : A list of strings
@@ -11,5 +11,5 @@ def create_tfidf(corpus):
 
     """
     vectorizer = TfidfVectorizer()
-    return { "vectors": vectorizer.fit_transform(corpus), "feature_names": vectorizer.get_feature_names()}
+    return {"vectors": vectorizer.fit_transform(corpus), "feature_names": vectorizer.get_feature_names()}
 

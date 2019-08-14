@@ -86,23 +86,23 @@ def normalize(comment):
         map(lambda word: word.translate(str.maketrans("", "", r"""[!"#$%&()*+,-./:;<=>?@[]^_`{|}~'\¿]""")),
             cleaned))
 
-    return remove_stopwords(stripped)
+    return " ".join( word for word in remove_stopwords(stripped))
 
 
 def test_normalize_simple():
-    assert normalize("HELLO BOY") == ["hello", "boy"]
+    assert normalize("HELLO BOY") == "hello boy"
 
 
 def test_normalize_newline():
-    assert normalize("HELLO BOY! \\n") == ["hello", "boy", " "]
+    assert normalize("HELLO BOY! \\n") == "hello boy  "
 
 
 def test_normalize_punctuation():
-    assert normalize("HELLO BOY! &") == ["hello", "boy", ""]
+    assert normalize("HELLO BOY! &") == "hello boy "
 
 
 def test_normalize_double_backslash():
-    assert normalize("HELLO BOY\\") == ["hello", "boy"]
+    assert normalize("HELLO BOY\\") == "hello boy"
 
 stopwords = ['i', 'like', 'me', 'my', 'im', 'myself', 'we', 'our', 'ours',
        'ourselves', 'you', "you're", 'youre', "you've", 'youve', "you'll",

@@ -17,9 +17,9 @@ To format the data for use in Opt Out:
 
 ## References
 
-If using amateur_expert* files please cite:
---------------------------------------------
+This dataset aggregates datasets related to these academic works[[1]](http://aclweb.org/anthology/W16-5618)[[2]](http://www.aclweb.org/anthology/N16-2013). We and Zeerak request that you cite both if you use this dataset.
 
+```
 @InProceedings{waseem:2016:NLPandCSS,
   author    = {Waseem, Zeerak},
   title     = {Are You a Racist or Am I Seeing Things? Annotator Influence on Hate Speech Detection on Twitter},
@@ -32,10 +32,6 @@ If using amateur_expert* files please cite:
   url       = {http://aclweb.org/anthology/W16-5618}
 }
 
-============================================
-
-If using {neither|sexism|racism}.json please cite:
-
 @InProceedings{waseem-hovy:2016:N16-2,
   author    = {Waseem, Zeerak  and  Hovy, Dirk},
   title     = {Hateful Symbols or Hateful People? Predictive Features for Hate Speech Detection on Twitter},
@@ -47,5 +43,5 @@ If using {neither|sexism|racism}.json please cite:
   pages     = {88--93},
   url       = {http://www.aclweb.org/anthology/N16-2013}
 }
-
+```
 

@@ -6,3 +6,4 @@ src.egg-info/
 Makefile
 docs/
 .Rproj.user
+data/external/rapeglish/

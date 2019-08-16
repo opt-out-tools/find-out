@@ -1,6 +1,5 @@
 import spacy
 import json
-import pandas as pd
 
 corpus = json.load(open("../../../../data/external/rapeglish/rape_threat_generator_data.json"))
 
@@ -14,4 +13,3 @@ for i,doc in enumerate(docs):
 
     print(f"Completed doc {i}")
 
-difference = relations - set(relations)

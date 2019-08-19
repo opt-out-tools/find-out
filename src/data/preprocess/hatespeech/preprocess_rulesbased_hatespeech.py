@@ -1,15 +1,14 @@
-import spacy
-import json
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-corpus = json.load(open("../../../../data/external/hatespeech/hs_data.csv"))
+def generate_tfidf_vectors(corpus):
+    """Returns the tf-idf vector representations of documents.
+    Args:
+        corpus (list) : A list of strings
 
-nlp = spacy.load("en_core_web_md")
-docs = [nlp(tweet) for tweet in corpus[1]]
+    Returns:
+        "vectors" (dict)  : The vectors
+        "feature_names" (dict)  : The names of the features
 
-relations = []
-for i,doc in enumerate(docs):
-    dep_relation = " ".join(token.dep_ for token in doc)
-    relations.append(dep_relation)
-
-    print(f"Completed doc {i}")
-
+    """
+    vectorizer = TfidfVectorizer()
+    return {"vectors": vectorizer.fit_transform(corpus), "feature_names": vectorizer.get_feature_names()}

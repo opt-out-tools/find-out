@@ -9,4 +9,4 @@ docs/
 data/interim/sample_metoo_tweets.csv
 data/raw/metoo/
 data/external/rapeglish/
-
+notebooks/hatespeech/.ipynb_checkpoints/

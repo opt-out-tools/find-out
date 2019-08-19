@@ -30,4 +30,3 @@ def count_corpus_word_frequency(corpus):
     word_counts = pd.value_counts(words.apply(pd.Series).stack())
     return pd.DataFrame({"word": word_counts.index, "count": word_counts.values})
 
-

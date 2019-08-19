@@ -4,13 +4,10 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from src.data.preprocess.hatespeech.preprocess_rdforest_hatespeech import generate_tfidf_vectors
+from src.features.hatespeech.featureeng_rulesbased_hatespeech import combine_feature_space
 from src.features.hatespeech.featureseng_rdforest_hatespeech import contains_not_sexist_but
 from src.utils.normalize import normalize
 
-def combine_feature_space(wordvecs, feature_to_add):
-    wordvecs = wordvecs.toarray()
-    feature_to_add = feature_to_add.reshape(len(wordvecs), 1)
-    return np.hstack((wordvecs,feature_to_add))
 
 data = pd.read_csv("../../../data/external/hatespeech/hs_data.csv")
 

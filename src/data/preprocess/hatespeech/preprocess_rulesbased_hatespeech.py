@@ -1,9 +1,9 @@
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 
 
-def generate_tfidf_vectors(corpus):
-    """Returns the tf-idf vector representations of documents.
+def generate_count_vectors(corpus):
+    """Returns the count vector representations of documents.
     Args:
         corpus (list) : A list of strings
 
@@ -12,7 +12,7 @@ def generate_tfidf_vectors(corpus):
         "feature_names" (dict)  : The names of the features
 
     """
-    vectorizer = TfidfVectorizer()
+    vectorizer = CountVectorizer()
     return {"vectors": vectorizer.fit_transform(corpus), "feature_names": vectorizer.get_feature_names()}
 
 

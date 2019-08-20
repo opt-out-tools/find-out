@@ -55,7 +55,7 @@ def contains_fuck_whore_same_sentence(tweet):
 
     for i,insult in enumerate(insults):
         print(f'This is {i} function')
-        yield POSITIVE if re.search(insult, tweet) else ABSTAIN
+        yield POSITIVE if re.search(insult, tweet) else ABSTAIN, insult
 
 
 

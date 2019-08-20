@@ -50,6 +50,9 @@ def contains_fuck_whore_same_sentence(tweet):
     nouns = ["whore", "women"]
     insults = [rf"""^(?=.*\b{verb}\b)(?=.*\b{noun}\b).*$""" for verb in verbs for noun in nouns]
 
+    ABSTAIN = 0
+    POSITIVE = 1
+
     for i,insult in enumerate(insults):
         print(f'This is {i} function')
         yield POSITIVE if re.search(insult, tweet) else ABSTAIN

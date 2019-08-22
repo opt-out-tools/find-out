@@ -20,22 +20,32 @@ annotator_4 <-
             flatten = TRUE) %>% 
   as_tibble()
 
+annotator_5 <-
+  stream_in(file("annotated/annotator_5.jsonl"),
+            flatten = TRUE) %>% 
+  as_tibble()
+
 unannotated_1 <- 
-  read_csv("datasets/annotator_1.csv")
+  read_csv("unannotated/annotator_1.csv")
 
 unannotated_3 <- 
-  read_csv("datasets/annotator_3.csv")
+  read_csv("unannotated/annotator_3.csv")
 
 unannotated_4 <- 
-  read_csv("datasets/annotator_4.csv")
+  read_csv("unannotated/annotator_4.csv")
+
+unannotated_5 <- 
+  read_csv("unannotated/annotator_5.csv")
 
 unannotated_data <- bind_rows(unannotated_1,
                               unannotated_3,
-                              unannotated_4)
+                              unannotated_4,
+                              unannotated_5)
 
 annotated_data <- bind_rows(annotator_1,
                             annotator_3,
-                            annotator_4)
+                            annotator_4,
+                            annotator_5)
  
 zeerack_data <- 
   read_csv("find-out/data/external/zeerack/zeerack_data.csv")

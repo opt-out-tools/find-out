@@ -8,3 +8,4 @@ docs/
 .Rproj.user
 data/interim/sample_metoo_tweets.csv
 data/raw/metoo/
+data/external/rapeglish/

@@ -1,10 +1,10 @@
 import tensorflow as tf
 import keras
 import os
+import pandas as pd
 
 
-
-def build(self, path_to_data, text_column_name, label_column_name, hyperparameters, save_word_embeddings):
+def build(self, path_to_data, text_column_name, label_column_name, hyperparameters):
     """Returns the built model. This function prepares the text, turns them into tensors, creates a word embedding
     and trains the neural net and build the final model. The model will always be saved. There is one flag that
     allow the embeddings to be saved.
@@ -14,7 +14,6 @@ def build(self, path_to_data, text_column_name, label_column_name, hyperparamete
         text_column_name (str) : The name of the column of the dataset with the text to be classified
         label_column_name (str) : The name of the column of labels.
         hyperparameters (dict) : A dictionary of all of the hyperparameters for the model.
-        save_word_embeddings (bool) : If true, will save the embedding data.
 
     Returns
         model : The sentiment analyser model, fit to the training data.

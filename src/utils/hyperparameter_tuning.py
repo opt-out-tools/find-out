@@ -1,13 +1,22 @@
-from hyperopt import Trials, STATUS_OK, tpe, rand
-from hyperas import optim
+from hyperopt import STATUS_OK
 from hyperas.distributions import choice
 import keras
 import numpy as np
 import pandas as pd
-import os
-from .model import Model as m
+import src.data.preprocess.dataturks.generate_nn_dataturks as preprocess
 
-def create_model(train_data):
+def data():
+    data = pd.read_csv("../../data/external/dataturks/example.csv")
+    dictionary = preprocess.create_dictionary(data['content'], 10000)
+    X_train, X_test = preprocess.split(data)
+    Y_train = X_train['label']
+    Y_test = X_test['label']
+
+    X_padded_train = keras.preprocessing.sequence.pad_sequences(dictionary.texts_to_sequences(X_train['content'].values), padding='post', maxlen=140)
+    X_padded_test = keras.preprocessing.sequence.pad_sequences(dictionary.texts_to_sequences(X_test['content'].values), padding='post', maxlen=140)
+    return X_padded_train, X_padded_test, Y_train.values, Y_test.values
+
+def create_model():
     """Returns the sentiment of the parsed sentence.
 
     Args:
@@ -18,18 +27,10 @@ def create_model(train_data):
     Returns
         model : The sentiment analyser model, fit to the training data.
     """
-    global corpus_vocabulary
 
-    X_train = train_data['content']
-    y_train = train_data['label']
-
-    vocab_size = 10000  # TODO automatic
-
-    train_sequences = corpus_vocabulary.texts_to_sequences(X_train.values)
-    padded_train = keras.preprocessing.sequence.pad_sequences(train_sequences, padding='post',
-                                                              maxlen=140)
+    X_train, X_test, Y_train, Y_test = data()
     model = keras.Sequential()
-    model.add(keras.layers.Embedding(vocab_size, 40))
+    model.add(keras.layers.Embedding(10000, 40))
     model.add(keras.layers.GlobalAveragePooling1D())
     model.add(keras.layers.Dense({{choice([np.power(2, 5), np.power(2, 6), np.power(2, 7)])}}, input_shape=(140,)))
     model.add(keras.layers.Dense({{choice([np.power(2, 5), np.power(2, 6), np.power(2, 7)])}}, input_shape=(140,)))
@@ -38,11 +39,11 @@ def create_model(train_data):
 
     split = int(len(X_train) / 4)  # number of comments halved
 
-    x_val = padded_train[:split]
-    partial_x_train = padded_train[split:]
+    x_val = X_train[:split]
+    partial_X_train = X_train[split:]
 
-    y_val = y_train[:split]
-    partial_y_train = y_train[split:]
+    y_val = Y_train[:split]
+    partial_y_train = Y_train[split:]
 
     from keras import callbacks
 
@@ -54,10 +55,9 @@ def create_model(train_data):
                   metrics=['accuracy'])
 
     model.fit(X_train,
-              y_train,
+              Y_train,
               epochs={{choice([25, 50, 75, 100])}},
               batch_size={{choice([16, 32, 64])}},
-              validation_data=(x_val, y_val),
               callbacks=[reduce_lr])
 
     score, acc = model.evaluate(x_val, y_val, verbose=0)
@@ -66,19 +66,5 @@ def create_model(train_data):
     return model
 
 
-if __name__ == '__main__':
-    data = pd.read_csv(os.getcwd() + "/data/dataturks/example.csv")
-    corpus_vocabulary = m.create_dictionary(data['content'], 10000)
 
-    train, test = m.split(data, 18000)
 
-    best_run, best_model = optim.minimize(model=create_model,
-                                          data=train,
-                                          algo=tpe.suggest,
-                                          max_evals=15,
-                                          trials=Trials())
-
-    print("Evalutation of best performing model:")
-    print(best_model.evaluate(test['content'], test['label']))
-    print("Best performing model chosen hyper-parameters:")
-    print(best_run)

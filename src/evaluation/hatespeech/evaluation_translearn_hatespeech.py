@@ -18,6 +18,7 @@ def get_f1score(model, test, y_test):
     print("Marco F1:%f" % f1_score(y_test, y_pred, average='macro'))
     print("Micro F1:%f" % f1_score(y_test, y_pred, average='micro'))
     print("Weighted F1:%f" % f1_score(y_test, y_pred, average='weighted'))
+    print(y_test)
 
 
 def evaluate_best_model(path_to_fine_tuned_model, x_test, y_test, word_embedding_matrix, vocab_size):

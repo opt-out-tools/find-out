@@ -22,8 +22,28 @@ def contains_cunt_or_synonyms(tweet):
     Returns:
         1 or 0 (int)  : The label.
     """
-    CUNT = r"""(cunt|slit|pussy|fanny|twat|snatch|)"""
+    CUNT = r"""(cunt|slit|pussy|fanny|twat|snatch|vagina)"""
     return POSITIVE if re.search(CUNT, tweet) else ABSTAIN
+
+def contains_dyke_or_synonyms(tweet):
+    """Returns 1 is the tweet contains the substring dyke or any synonym and 0 if not
+    Args:
+        tweet (str) : The tweet.
+    Returns:
+        1 or 0 (int)  : The label.
+    """
+    DYKE = r"""(dyke|lesbian|butch|dike)"""
+    return POSITIVE if re.search(DYKE, tweet) else ABSTAIN
+
+def contains_camel_toe(tweet):
+    """Returns 1 is the tweet contains the substring cunt or any synonym and 0 if not
+    Args:
+        tweet (str) : The tweet.
+    Returns:
+        1 or 0 (int)  : The label.
+    """
+    CAMEL_TOE = r"""camel toe"""
+    return POSITIVE if re.search(CAMEL_TOE, tweet) else ABSTAIN
 
 def contains_feminazi(tweet):
     """Returns 1 is the tweet contains the substring not sexist but or any synonym and 0 if not
@@ -73,19 +93,19 @@ def contains_dick_or_synonym(tweet):
     Returns:
         1 or 0 (int)  : The label.
     """
-    DICK = r"""\b(dick|cock|chode|fuckpole|knob|choad)"""
+    DICK = r"""(dick|cock|chode|fuckpole|knob|choad)"""
 
     return POSITIVE if re.search(DICK, tweet) else ABSTAIN
 
-def contains_bitch(tweet):
+def contains_bitch_cunt(tweet):
     """Returns 1 is the tweet contains the substring or combinations of that are insultive and 0 if not
     Args:
         tweet (str) : The tweet.
     Returns:
         1 or 0 (int)  : The label.
     """
-    adjectives = ["dumb", "fucking", "stupid", "greedy", "fuck", "dumbest"]
-    nouns = ["bitch", "cunt"]
+    adjectives = ["dumb", "fucking", "stupid", "greedy", "fuck", "dumbest", "lying"]
+    nouns = ["bitch", "cunt", "whore"]
     insults = [rf"""^(?=.*\b{adjective}\b)(?=.*\b{noun}\b).*$""" for adjective in adjectives for noun in nouns]
 
     ABSTAIN = 0
@@ -112,7 +132,7 @@ def contains_fuck_whore_same_sentence(tweet):
     for i,insult in enumerate(insults):
         yield POSITIVE if re.search(insult, tweet) else ABSTAIN, insult
 
-def contains_women_bad_drivers(tweet):
+def contains_women_stereotypes(tweet):
     """Returns 1 is the tweet contains the substring women can't drive and 0 if not
      Args:
          tweet (str) : The tweet.
@@ -121,16 +141,15 @@ def contains_women_bad_drivers(tweet):
      """
     negation = ["cant", "cannot","shouldnt"]
     nouns = ["whores?", "women", "sluts?", "girls?", "bitches?"]
-    verbs = ["drive","ref", "be president", "be in politics", "be a politician"]
+    actions = ["drive","ref", "be president", "be in politics", "be a politician", "play sports", "do maths"]
 
-    insults = [rf"""^(?=.*\b{noun}\b)(?=.*\b{negate}\b)(?=.* \b{verb}\b).*$""" for verb in verbs for negate in negation for noun in nouns]
+    insults = [rf"""^(?=.*\b{noun}\b)(?=.*\b{negate}\b)(?=.* \b{act}\b).*$""" for act in actions for negate in negation for noun in nouns]
 
     ABSTAIN = 0
     POSITIVE = 1
 
     for i,insult in enumerate(insults):
         yield POSITIVE if re.search(insult, tweet) else ABSTAIN, insult
-
 
 
 

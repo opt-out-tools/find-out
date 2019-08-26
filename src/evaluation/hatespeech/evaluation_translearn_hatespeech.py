@@ -1,3 +1,7 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from wordcloud import WordCloud
 from src.models.hatespeech.model_translearn_hatespeech import create_model
 from sklearn.metrics import f1_score, confusion_matrix
 
@@ -18,7 +22,6 @@ def get_f1score(model, test, y_test):
     print("Marco F1:%f" % f1_score(y_test, y_pred, average='macro'))
     print("Micro F1:%f" % f1_score(y_test, y_pred, average='micro'))
     print("Weighted F1:%f" % f1_score(y_test, y_pred, average='weighted'))
-    print(y_test)
 
 
 def evaluate_best_model(path_to_fine_tuned_model, x_test, y_test, word_embedding_matrix, vocab_size):
@@ -28,3 +31,21 @@ def evaluate_best_model(path_to_fine_tuned_model, x_test, y_test, word_embedding
     print("%s: %.2f%%, %s: %.2f" % (best_model.metrics_names[1], scores[1] * 100, best_model.metrics_names[0], scores[0]))
 
     get_f1score(best_model, x_test, y_test)
+
+
+def draw_wordcloud(data, name):
+    """Draws a picture of a wordcloud with the data.
+    Args:
+        data (pandas df): the text to be used.
+    Returns:
+        Displays and saves wordcloud.
+    """
+
+    words = " ".join(sentence for sentence in data.to_list())
+
+    wordcloud = WordCloud(background_color="white").generate(words)
+
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.savefig("wordcloud_"+name+".png")
+    plt.axis("off")
+    plt.show()

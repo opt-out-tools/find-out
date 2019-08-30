@@ -1,5 +1,5 @@
+import pandas as pd
 import re
-import spacy
 from spacy.lang.en import LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES
 from spacy.lemmatizer import Lemmatizer
 from ekphrasis.classes.preprocessor import TextPreProcessor
@@ -10,6 +10,7 @@ tweets = ["RT @asredasmyhair: Feminists, take note. #FemFreeFriday #WomenAgainst
           "@MGTOWKnight @FactsVsOpinion ...cue the NAFALT in 3..2...1...",
           "RT @baum_erik: Lol I'm not surprised these 2 accounts blocked me @femfreq #FemiNazi #Gamergate &amp; @MomsAgainstWWE #ParanoidParent http://t.câ€¦"
     ]
+df_tweets = pd.DataFrame({"text": tweets})
 
 tokenized_tweets = [ "RT @asredasmyhair : Feminists , take note . #FemFreeFriday #WomenAgainstFeminism http://t.co/J2HqzVJ8Cx",
     "RT @AllstateJackie : Antis will stop treating blocks as trophies as soon as feminists stop treating blocks as arguments . đŸ \uf190 ¸ â ˜ • #GamerGate",
@@ -17,7 +18,10 @@ tokenized_tweets = [ "RT @asredasmyhair : Feminists , take note . #FemFreeFriday
     "RT @baum_erik : Lol I ' m not surprised these 2 accounts blocked me @femfreq #FemiNazi #Gamergate & @MomsAgainstWWE #ParanoidParent http://t.câ€¦"
     ]
 
-def contractions_unpacker(tweets):
+df_tokenized = pd.DataFrame({"text": tweets})
+
+
+def contractions_unpacker(tweet):
     """ Returns a the values parsed as normalized versions of themselves
     Args:
          tweet (pandas df) : df of the original tweet.
@@ -26,131 +30,265 @@ def contractions_unpacker(tweets):
           normalized_tweet (str) : the normalized tweet.
 
     """
-    preprocesser = TextPreProcessor(
-    unpack_contractions=True)
-    return tweets.apply(lambda tweet: preprocesser.pre_process_doc(tweet))
+    contractionsList = {
+        "ain't": "am not",
+        "aren't": "are not",
+        "can't": "cannot",
+        "can't've": "cannot have",
+        "'cause": "because",
+        "could've": "could have",
+        "couldn't": "could not",
+        "couldn't've": "could not have",
+        "didn't": "did not",
+        "doesn't": "does not",
+        "don't": "do not",
+        "hadn't": "had not",
+        "hadn't've": "had not have",
+        "hasn't": "has not",
+        "haven't": "have not",
+        "he'd": "he would",
+        "he'd've": "he would have",
+        "he'll": "he will",
+        "he'll've": "he will have",
+        "he's": "he is",
+        "how'd": "how did",
+        "how'd'y": "how do you",
+        "how'll": "how will",
+        "how's": "how is",
+        "I'd": "I would",
+        "I'd've": "I would have",
+        "I'll": "I will",
+        "I'll've": "I will have",
+        "I'm": "I am",
+        "I've": "I have",
+        "isn't": "is not",
+        "it'd": "it had",
+        "it'd've": "it would have",
+        "it'll": "it will",
+        "it'll've": "it will have",
+        "it's": "it is",
+        "let's": "let us",
+        "ma'am": "madam",
+        "mayn't": "may not",
+        "might've": "might have",
+        "mightn't": "might not",
+        "mightn't've": "might not have",
+        "must've": "must have",
+        "mustn't": "must not",
+        "mustn't've": "must not have",
+        "needn't": "need not",
+        "needn't've": "need not have",
+        "o'clock": "of the clock",
+        "oughtn't": "ought not",
+        "oughtn't've": "ought not have",
+        "shan't": "shall not",
+        "sha'n't": "shall not",
+        "shan't've": "shall not have",
+        "she'd": "she would",
+        "she'd've": "she would have",
+        "she'll": "she will",
+        "she'll've": "she will have",
+        "she's": "she is",
+        "should've": "should have",
+        "shouldn't": "should not",
+        "shouldn't've": "should not have",
+        "so've": "so have",
+        "so's": "so is",
+        "that'd": "that would",
+        "that'd've": "that would have",
+        "that's": "that is",
+        "there'd": "there had",
+        "there'd've": "there would have",
+        "there's": "there is",
+        "they'd": "they would",
+        "they'd've": "they would have",
+        "they'll": "they will",
+        "they'll've": "they will have",
+        "they're": "they are",
+        "they've": "they have",
+        "to've": "to have",
+        "wasn't": "was not",
+        "we'd": "we had",
+        "we'd've": "we would have",
+        "we'll": "we will",
+        "we'll've": "we will have",
+        "we're": "we are",
+        "we've": "we have",
+        "weren't": "were not",
+        "what'll": "what will",
+        "what'll've": "what will have",
+        "what're": "what are",
+        "what's": "what is",
+        "what've": "what have",
+        "when's": "when is",
+        "when've": "when have",
+        "where'd": "where did",
+        "where's": "where is",
+        "where've": "where have",
+        "who'll": "who will",
+        "who'll've": "who will have",
+        "who's": "who is",
+        "who've": "who have",
+        "why's": "why is",
+        "why've": "why have",
+        "will've": "will have",
+        "won't": "will not",
+        "won't've": "will not have",
+        "would've": "would have",
+        "wouldn't": "would not",
+        "wouldn't've": "would not have",
+        "y'all": "you all",
+        "y'alls": "you alls",
+        "y'all'd": "you all would",
+        "y'all'd've": "you all would have",
+        "y'all're": "you all are",
+        "y'all've": "you all have",
+        "you'd": "you had",
+        "you'd've": "you would have",
+        "you'll": "you you will",
+        "you'll've": "you you will have",
+        "you're": "you are",
+        "you've": "you have"
+    }
+
+    pattern = re.compile(r'\b(?:%s)\b' % '|'.join(contractionsList.keys()))
+
+    def replace(match):
+        return contractionsList[match.group(0)]
+
+    return pattern.sub(replace, tweet)
+
+contractionsList = {
+        "ain't": "am not",
+        "aren't": "are not",
+        "can't": "cannot",
+        "can't've": "cannot have",
+        "'cause": "because",
+        "could've": "could have",
+        "couldn't": "could not",
+        "couldn't've": "could not have",
+        "didn't": "did not",
+        "doesn't": "does not",
+        "don't": "do not",
+        "hadn't": "had not",
+        "hadn't've": "had not have",
+        "hasn't": "has not",
+        "haven't": "have not",
+        "he'd": "he would",
+        "he'd've": "he would have",
+        "he'll": "he will",
+        "he'll've": "he will have",
+        "he's": "he is",
+        "how'd": "how did",
+        "how'd'y": "how do you",
+        "how'll": "how will",
+        "how's": "how is",
+        "I'd": "I would",
+        "I'd've": "I would have",
+        "I'll": "I will",
+        "I'll've": "I will have",
+        "I'm": "I am",
+        "I've": "I have",
+        "isn't": "is not",
+        "it'd": "it had",
+        "it'd've": "it would have",
+        "it'll": "it will",
+        "it'll've": "it will have",
+        "it's": "it is",
+        "let's": "let us",
+        "ma'am": "madam",
+        "mayn't": "may not",
+        "might've": "might have",
+        "mightn't": "might not",
+        "mightn't've": "might not have",
+        "must've": "must have",
+        "mustn't": "must not",
+        "mustn't've": "must not have",
+        "needn't": "need not",
+        "needn't've": "need not have",
+        "o'clock": "of the clock",
+        "oughtn't": "ought not",
+        "oughtn't've": "ought not have",
+        "shan't": "shall not",
+        "sha'n't": "shall not",
+        "shan't've": "shall not have",
+        "she'd": "she would",
+        "she'd've": "she would have",
+        "she'll": "she will",
+        "she'll've": "she will have",
+        "she's": "she is",
+        "should've": "should have",
+        "shouldn't": "should not",
+        "shouldn't've": "should not have",
+        "so've": "so have",
+        "so's": "so is",
+        "that'd": "that would",
+        "that'd've": "that would have",
+        "that's": "that is",
+        "there'd": "there had",
+        "there'd've": "there would have",
+        "there's": "there is",
+        "they'd": "they would",
+        "they'd've": "they would have",
+        "they'll": "they will",
+        "they'll've": "they will have",
+        "they're": "they are",
+        "they've": "they have",
+        "to've": "to have",
+        "wasn't": "was not",
+        "we'd": "we had",
+        "we'd've": "we would have",
+        "we'll": "we will",
+        "we'll've": "we will have",
+        "we're": "we are",
+        "we've": "we have",
+        "weren't": "were not",
+        "what'll": "what will",
+        "what'll've": "what will have",
+        "what're": "what are",
+        "what's": "what is",
+        "what've": "what have",
+        "when's": "when is",
+        "when've": "when have",
+        "where'd": "where did",
+        "where's": "where is",
+        "where've": "where have",
+        "who'll": "who will",
+        "who'll've": "who will have",
+        "who's": "who is",
+        "who've": "who have",
+        "why's": "why is",
+        "why've": "why have",
+        "will've": "will have",
+        "won't": "will not",
+        "won't've": "will not have",
+        "would've": "would have",
+        "wouldn't": "would not",
+        "wouldn't've": "would not have",
+        "y'all": "you all",
+        "y'alls": "you alls",
+        "y'all'd": "you all would",
+        "y'all'd've": "you all would have",
+        "y'all're": "you all are",
+        "y'all've": "you all have",
+        "you'd": "you had",
+        "you'd've": "you would have",
+        "you'll": "you you will",
+        "you'll've": "you you will have",
+        "you're": "you are",
+        "you've": "you have"
+    }
+
+contractions = pd.DataFrame(
+        {"contraction": list(contractionsList.keys()), "unpacked": list(contractionsList.values())})
+
+def test_contraction_unpacking():
+    contractions['unpacked_values'] = contractions['contraction'].apply(lambda contra: contractions_unpacker(contra))
+    assert contractions['unpacked_values'].all() == contractions['unpacked'].all()
 
 def test_im_contraction_unpack():
-    assert contractions_unpacker(tweets[3]) == "RT @baum_erik: Lol I am not surprised these 2 accounts blocked me @femfreq #FemiNazi #Gamergate &amp; @MomsAgainstWWE #ParanoidParent http://t.câ€¦"
-
-def test_incorrect_contractions_unpacker():
-    assert contractions_unpacker("ain't") != "am not"
-    assert contractions_unpacker("can't") != "cannot"
-    assert contractions_unpacker("can't've") != "cannot have"
-    assert contractions_unpacker("'cause") != "because"
-    assert contractions_unpacker("could've") != "could have"
-    assert contractions_unpacker("hadn't've") != "had not have"
-    assert contractions_unpacker("he'd") != "he would"
-    assert contractions_unpacker( "he'd've") != "he would have"
-    assert contractions_unpacker("he'll've") != "he will have"
-    assert contractions_unpacker("he's") != "he is"
-    assert contractions_unpacker("how'd") != "how did"
-    assert contractions_unpacker("how'll") != "how will"
-    assert contractions_unpacker("how's") != "how is"
-    assert contractions_unpacker("I'd") != "I would"
-    assert contractions_unpacker("I'd've") != "I would have"
-    assert contractions_unpacker("I'll've") != "I will have"
-    assert contractions_unpacker("it'd") != "it had"
-    assert contractions_unpacker("it'd've") != "it would have"
-    assert contractions_unpacker("it'll") != "it will"
-    assert contractions_unpacker("it'll've") != "it will have"
-    assert contractions_unpacker("it's") != "it is"
-    assert contractions_unpacker("ma'am") != "madam"
-    assert contractions_unpacker("mayn't") != "may not"
-    assert contractions_unpacker("might've") != "might have"
-    assert contractions_unpacker("mightn't've") != "might not have"
-    assert contractions_unpacker("must've") != "must have"
-    assert contractions_unpacker("mustn't've") != "must not have"
-    assert contractions_unpacker("needn't") != "need not"
-    assert contractions_unpacker("needn't've") != "need not have"
-    assert contractions_unpacker("o'clock") != "of the clock"
-    assert contractions_unpacker("oughtn't") != "ought not"
-    assert contractions_unpacker("oughtn't've") != "ought not have"
-    assert contractions_unpacker("sha'n't") != "shall not"
-    assert contractions_unpacker("shan't've") != "shall not have"
-    assert contractions_unpacker("she'd") != "she would"
-    assert contractions_unpacker("she'd've") != "she would have"
-    assert contractions_unpacker("she'll've") != "she will have"
-    assert contractions_unpacker("she's") != "she is"
-    assert contractions_unpacker("shouldn't've") != "should not have"
-    assert contractions_unpacker("so've") != "so have"
-    assert contractions_unpacker("so's") != "so is"
-    assert contractions_unpacker("that'd") != "that would"
-    assert contractions_unpacker("that'd've") != "that would have"
-    assert contractions_unpacker("that's") != "that is"
-    assert contractions_unpacker("there'd") != "there had"
-    assert contractions_unpacker("there'd've") != "there would have"
-    assert contractions_unpacker("there's") != "there is"
-    assert contractions_unpacker("they'd") != "they would"
-    assert contractions_unpacker("they'd've") != "they would have"
-    assert contractions_unpacker("they'll've") != "they will have"
-    assert contractions_unpacker("to've") != "to have"
-    assert contractions_unpacker("wasn't") != "was not"
-    assert contractions_unpacker("we'd") != "we had"
-    assert contractions_unpacker("we'd've") != "we would have"
-    assert contractions_unpacker("we'll've") != "we will have"
-    assert contractions_unpacker("what'll've") != "what will have"
-    assert contractions_unpacker("what's") != "what is"
-    assert contractions_unpacker("when's") != "when is"
-    assert contractions_unpacker("when've") != "when have"
-    assert contractions_unpacker("where'd") != "where did"
-    assert contractions_unpacker("where's") != "where is"
-    assert contractions_unpacker("where've") != "where have"
-    assert contractions_unpacker("who'll've") != "who will have"
-    assert contractions_unpacker("who's") != "who is"
-    assert contractions_unpacker("why's") != "why is"
-    assert contractions_unpacker("why've") != "why have"
-    assert contractions_unpacker("will've") != "will have"
-    assert contractions_unpacker("won't've") != "will not have"
-    assert contractions_unpacker("wouldn't've") != "would not have"
-    assert contractions_unpacker("y'all'd") != "you all would"
-    assert contractions_unpacker("y'all'd've") != "you all would have"
-    assert contractions_unpacker("y'all're") != "you all are"
-    assert contractions_unpacker("y'all've") != "you all have"
-    assert contractions_unpacker("you'd") != "you had"
-    assert contractions_unpacker("you'd've") != "you would have"
-    assert contractions_unpacker("you'll") != "you you will"
-    assert contractions_unpacker("you'll've") != "you you will have"
-
-def test_contraction_unpack():
-    assert contractions_unpacker("aren't") == "are not"
-    assert contractions_unpacker("didn't") == "did not"
-    assert contractions_unpacker("doesn't") == "does not"
-    assert contractions_unpacker("don't") == "do not"
-    assert contractions_unpacker("hadn't") == "had not"
-    assert contractions_unpacker("hasn't") == "has not"
-    assert contractions_unpacker("haven't") == "have not"
-    assert contractions_unpacker("he'll") == "he will"
-    assert contractions_unpacker("I'll") == "I will"
-    assert contractions_unpacker("I'm") == "I am"
-    assert contractions_unpacker("I've") == "I have"
-    assert contractions_unpacker("isn't") == "is not"
-    assert contractions_unpacker("let's") == "let us"
-    assert contractions_unpacker("mightn't") == "might not"
-    assert contractions_unpacker("mustn't") == "must not"
-    assert contractions_unpacker("shan't") == "shall not"
-    assert contractions_unpacker("she'll") == "she will"
-    assert contractions_unpacker("should've") == "should have"
-    assert contractions_unpacker("shouldn't") == "should not"
-    assert contractions_unpacker("they'll") == "they will"
-    assert contractions_unpacker("they're") == "they are"
-    assert contractions_unpacker("they've") == "they have"
-    assert contractions_unpacker("we'll") == "we will"
-    assert contractions_unpacker("we're") == "we are"
-    assert contractions_unpacker("we've") == "we have"
-    assert contractions_unpacker("weren't") == "were not"
-    assert contractions_unpacker("what'll") == "what will"
-    assert contractions_unpacker("what're") == "what are"
-    assert contractions_unpacker("what've") == "what have"
-    assert contractions_unpacker("who'll") == "who will"
-    assert contractions_unpacker("who've") == "who have"
-    assert contractions_unpacker("won't") == "will not"
-    assert contractions_unpacker("would've") == "would have"
-    assert contractions_unpacker("wouldn't") == "would not"
-    assert contractions_unpacker("y'all") == "you all"
-    assert contractions_unpacker("y'alls") == "you alls"
-    assert contractions_unpacker("you're") == "you are"
-    assert contractions_unpacker("you've") == "you have"
+    df_tweets['contractions'] = df_tweets['text'].apply(lambda tweet: contractions_unpacker(tweet))
+    assert df_tweets.loc[3, 'contractions'] == "RT @baum_erik: Lol I am not surprised these 2 accounts blocked me @femfreq #FemiNazi #Gamergate &amp; @MomsAgainstWWE #ParanoidParent http://t.câ€¦"
 
 def social_tokenizer(tweet):
     """Returns the tokenized sentence using a tokenizer specially designed for social network content.
@@ -163,7 +301,7 @@ def social_tokenizer(tweet):
 
     """
     social_tokenizer = SocialTokenizer(lowercase=False).tokenize
-    return social_tokenizer(tweet)
+    return " ".join(s for s in social_tokenizer(tweet))
 
 
 def test_social_tokenizer():
@@ -214,7 +352,7 @@ def test_lowercase():
     assert lowercase(tokenized_tweets[2]) == "@mgtowknight @factsvsopinion . . . cue the nafalt in 3 . . 2 . . . 1 . . ."
 
 
-def normalizer(tweets, *args):
+def normalizer(tweets):
     """ Returns a the values parsed as normalized versions of themselves
     Args:
          tweet (pandas df) : df of the original tweet.
@@ -223,15 +361,15 @@ def normalizer(tweets, *args):
           normalized_tweet (str) : the normalized tweet.
 
     """
-
+    # TODO choose what normalizeS
     preprocesser = TextPreProcessor(
     normalize=['url', 'email', 'percent', 'money', 'phone', 'user',
                     'time', 'date', 'hashtag'])
     return tweets.apply(lambda tweet: preprocesser.pre_process_doc(tweet))
 
 def test_normalize():
-    # choose what normalize
-    assert normalizer(tweets[0]) == 'RT <user> : Feminists, take note. <hashtag> <hashtag> <url>'
+    df_tweets['normalized'] = normalizer(df_tweets['text'])
+    assert df_tweets.loc[0, 'normalized'] == 'RT <user> : Feminists, take note. <hashtag> <hashtag> <url>'
 
 
 def escape_unicode(tweet):
@@ -327,32 +465,28 @@ stopwords = ['i', 'like', 'me', 'my', 'im', 'myself', 'we', 'our', 'ours',
 
 def remove_stopwords(tweet):
     """Returns a string of words with stop words removed."""
-    return " ".join(word for word in tweet if word not in stopwords)
+    return " ".join(word for word in tweet.split(" ") if word not in stopwords)
 
 
 def test_remove_stopwords():
-    assert remove_stopwords(["the", "cat", "is", "king"]) == ["cat", "king"]
+    assert remove_stopwords("the cat is king") == "cat king"
 
 
 def test_remove_basic_stopwords():
-    assert remove_stopwords(["you", "i", "would", "it", "like"]) == []
+    assert remove_stopwords("you i would it like") == ""
 
 
 def test_remove_stopwords_capitals():
     # This does not remove capital stopwords as this is handled elsewhere in the normalization step
-    assert remove_stopwords(["The", "cat", "Is", "king", "like"]) == ["The", "cat", "Is", "king"]
+    assert remove_stopwords("The cat Is king") == "The cat Is king"
 
-
+# TODO documents and testing
 def lemmatization(tweet, nlp):
     lemmatizer = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)
     tweet = nlp(tweet)
     lemmatized = [lemmatizer(word.text.lower(), word.pos_)[0] for word in tweet]
 
     return " ".join(lemma for lemma in lemmatized)
-
-
-def test_lemma():
-    assert lemmatization("He was running and eating at same time. He has bad habit of swimming after playing long hours in the Sun.") == "he be run and eat at same time . he have bad habit of swimming after play long hour in the sun ."
 
 def spell_correcter(tokenized_tweets):
     from ekphrasis.classes.spellcorrect import SpellCorrector

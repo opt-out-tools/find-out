@@ -24,7 +24,7 @@ df_tokenized = pd.DataFrame({"text": tweets})
 def contractions_unpacker(tweet):
     """ Returns a the values parsed as normalized versions of themselves
     Args:
-         tweet (pandas df) : df of the original tweet.
+         tweet (str) : The original tweet.
 
     Returns:
           normalized_tweet (str) : the normalized tweet.
@@ -493,4 +493,11 @@ def spell_correcter(tokenized_tweets):
     sp = SpellCorrector(corpus="english")
 
     return tokenized_tweets.apply(lambda tweet: [sp.correct(word) for word in tweet.split(" ")])
+
+# suggested order
+# data['contractions_unpacked'] = data['text'].apply(lambda tweet: contractions_unpacker(tweet))
+# data['tokenize'] = data['contractions_unpacked'].apply(lambda tweet: social_tokenizer(tweet))
+# data['remove_punctuation'] = data['tokenize'].apply(lambda tweet: punctuation_cleaner(tweet))
+# data['remove_stopwords'] = data['remove_punctuation'].apply(lambda tweet: remove_stopwords(tweet))
+# data['norm_removed_stopwords'] = normalizer(data['remove_stopwords'])
 

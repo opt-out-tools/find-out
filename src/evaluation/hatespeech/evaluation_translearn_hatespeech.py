@@ -1,4 +1,3 @@
-import pandas as pd
 import matplotlib.pyplot as plt
 
 from wordcloud import WordCloud
@@ -33,7 +32,7 @@ def evaluate_best_model(path_to_fine_tuned_model, x_test, y_test, word_embedding
     get_f1score(best_model, x_test, y_test)
 
 
-def draw_wordcloud(data, name):
+def draw_wordcloud(data):
     """Draws a picture of a wordcloud with the data.
     Args:
         data (pandas df): the text to be used.
@@ -43,9 +42,23 @@ def draw_wordcloud(data, name):
 
     words = " ".join(sentence for sentence in data.to_list())
 
-    wordcloud = WordCloud(background_color="white").generate(words)
+    return  WordCloud(background_color="white").generate(words)
 
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.savefig("wordcloud_"+name+".png")
-    plt.axis("off")
-    plt.show()
+def density_of_curse_words(tweet):
+    """Returns the density of curse words.
+    Args:
+        tweet (str) :
+
+    Returns:
+        density (df) :
+    """
+
+    curse_words = ["fuck", "shit", "motherfucker", "crap", "ass", "bitch", "cunt"]
+
+    tweet = tweet.split(" ")
+    number_of_words = len(tweet)
+
+    counts = {curse_word : tweet.count(curse_word) for curse_word in curse_words}
+    for curse_word in counts:
+        counts[curse_word] = counts[curse_word]/number_of_words
+    return counts

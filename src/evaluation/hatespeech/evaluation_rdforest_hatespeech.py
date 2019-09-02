@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from wordcloud import WordCloud
-from src.utils.preprocess_helpers import normalizer
+from src.utils.preprocess_text_helpers import normalizer
 
 
 data = pd.read_csv("../../../data/external/hatespeech/hs_data.csv")

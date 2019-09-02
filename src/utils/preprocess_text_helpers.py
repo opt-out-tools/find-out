@@ -5,8 +5,8 @@ from spacy.lemmatizer import Lemmatizer
 from ekphrasis.classes.preprocessor import TextPreProcessor
 from ekphrasis.classes.tokenizer import SocialTokenizer
 
-from src.utils.helper import stopwords, contractions
-from src.utils.helper_test import create_tweets_df, create_tokenized_tweets_df
+from src.utils.stopwords_and_contractions import stopwords, contractions
+from src.utils.domain_objects_test import create_tweets_df, create_tokenized_tweets_df
 
 def contractions_unpacker(tweet):
     """ Returns the contracted words within the tweet as unpacked versions of themselves. eg. she's -> she is

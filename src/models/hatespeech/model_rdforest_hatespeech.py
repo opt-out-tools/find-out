@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from src.data.preprocess.hatespeech.preprocess_rdforest_hatespeech import generate_tfidf_vectors
 from src.features.hatespeech.featureseng_rdforest_hatespeech import contains_not_sexist_but
-from src.utils.preprocess_helpers import normalizer
+from src.utils.preprocess_text_helpers import normalizer
 
 def combine_feature_space(wordvecs, feature_to_add):
     wordvecs = wordvecs.toarray()

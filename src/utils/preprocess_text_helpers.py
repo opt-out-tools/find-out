@@ -47,7 +47,8 @@ def test_contraction_unpack_case_agnostic():
     assert contractions_unpacker("I'm") == "I am"
 
 def social_tokenizer(tweet):
-    """Returns the tokenized sentence using a tokenizer specially designed for social network content.
+    """Returns the tokenized sentence using a tokenizer specially designed for social network content,
+    that can handle complex emoticons, emojis and other unstructured expressions like dates, times and more.
 
     Args:
         tweet (str) : the original tweet.
@@ -59,24 +60,23 @@ def social_tokenizer(tweet):
     social_tokenizer = SocialTokenizer(lowercase=False).tokenize
     return " ".join(s for s in social_tokenizer(tweet))
 
-
 def test_social_tokenizer():
-    # TODO how to handle invalid unicode or leave it and use it as feature because indication of obfuscation
-    assert social_tokenizer(tweets.loc[0, 'text']) == "RT @asredasmyhair : Feminists , take note . #FemFreeFriday #WomenAgainstFeminism http://t.co/J2HqzVJ8Cx"
-    assert social_tokenizer(tweets.loc[1, 'text']) == "RT @AllstateJackie : Antis will stop treating blocks as trophies as soon as feminists stop treating blocks as arguments . đŸ \uf190 ¸ â ˜ • #GamerGate"
-    assert social_tokenizer(tweets.loc[2, 'text']) == "@MGTOWKnight @FactsVsOpinion . . . cue the NAFALT in 3 . . 2 . . . 1 . . ."
-    assert social_tokenizer(tweets.loc[3, 'text']) == "RT @baum_erik : Lol I ' m not surprised these 2 accounts blocked me @femfreq #FemiNazi #Gamergate & @MomsAgainstWWE #ParanoidParent http://t.câ€¦"
+    assert social_tokenizer("@blanchettswhore Sunday,paul :)tweet? cele,blanchetts :) whore...?") == "@blanchettswhore Sunday , paul :) tweet ? cele , blanchetts :) whore . . . ?"
+    assert social_tokenizer("LIKEWISE 14:40@Reni__Rinse who's f****N dumb idea was it to change Thor to a girl?") == "LIKEWISE 14:40 @Reni__Rinse who ' s f****N dumb idea was it to change Thor to a girl ?"
+    assert social_tokenizer(":-3;‑]O_o 3:‑) >.<") == ":-3 ;‑] O_o 3:‑) >.<"
 
 def punctuation_cleaner(tweet):
     """Returns the sentence with punctuation removed. If there is elongated punctuation, this is also removed.
+    To be used after the social_tokenizer method.
 
     Args:
-        tweet (str) : the original tweet.
+        tweet (str) : the tokenized tweet.
 
     Returns:
          cleaned_tweet (str) : the cleaned tweet.
 
     """
+    print(tweet)
     return re.sub(r"\s[:,!.](?=\s)?", '', tweet)
 
 def test_removes_colon():
@@ -221,10 +221,4 @@ def spell_correcter(tokenized_tweets):
 
     return tokenized_tweets.apply(lambda tweet: [sp.correct(word) for word in tweet.split(" ")])
 
-# suggested order
-# data['contractions_unpacked'] = data['text'].apply(lambda tweet: contractions_unpacker(tweet))
-# data['tokenize'] = data['contractions_unpacked'].apply(lambda tweet: social_tokenizer(tweet))
-# data['remove_punctuation'] = data['tokenize'].apply(lambda tweet: punctuation_cleaner(tweet))
-# data['remove_stopwords'] = data['remove_punctuation'].apply(lambda tweet: remove_stopwords(tweet))
-# data['norm_removed_stopwords'] = normalizer(data['remove_stopwords'])
 

@@ -3,7 +3,6 @@ from src.utils.preprocess_text_helpers import contractions_unpacker, social_toke
     punctuation_cleaner
 
 tweets = create_tweets_df()
-tokenized_tweets = create_tokenized_tweets_df()
 
 def normalize(df):
     """Returns normalized text.

@@ -8,11 +8,9 @@ from ekphrasis.classes.tokenizer import SocialTokenizer
 from src.utils.helper import stopwords, contractions
 from src.utils.helper_test import create_tweets_df, create_tokenized_tweets_df
 
-tweets = create_tweets_df()
-tokenized_tweets = create_tokenized_tweets_df()
-
 def contractions_unpacker(tweet):
-    """ Returns the contracted words within the string as unpacked versions of themselves. eg. she's -> she is
+    """ Returns the contracted words within the tweet as unpacked versions of themselves. eg. she's -> she is
+
     Args:
          tweet (str) : The original tweet.
 
@@ -22,23 +20,31 @@ def contractions_unpacker(tweet):
     """
     contractionsList = contractions()
 
-    pattern = re.compile(r'\b(?:%s)\b' % '|'.join(contractionsList.keys()))
+    pattern = re.compile(r'\b(?:%s)\b' % '|'.join(contractionsList.keys()), flags=re.IGNORECASE)
 
     def replace(match):
-        return contractionsList[match.group(0)]
+        match = match.group(0).lower()
+        return contractionsList[match]
 
     return pattern.sub(replace, tweet)
+
+tweets = create_tweets_df()
+tokenized_tweets = create_tokenized_tweets_df()
 
 df_contractions = pd.DataFrame(
         {"contraction": list(contractions().keys()), "unpacked": list(contractions().values())})
 
-def test_contraction_unpacking():
+def test_contraction_unpacking_all():
     df_contractions['unpacked_values'] = df_contractions['contraction'].apply(lambda contra: contractions_unpacker(contra))
     assert df_contractions['unpacked_values'].all() == df_contractions['unpacked'].all()
 
-def test_im_contraction_unpack():
+def test_contraction_unpack_in_sentence():
     tweets['contractions'] = tweets['text'].apply(lambda tweet: contractions_unpacker(tweet))
     assert tweets.loc[3, 'contractions'] == "RT @baum_erik: Lol I am not surprised these 2 accounts blocked me @femfreq #FemiNazi #Gamergate &amp; @MomsAgainstWWE #ParanoidParent http://t.câ€¦"
+
+def test_contraction_unpack_case_agnostic():
+    assert contractions_unpacker("Ain't") == "am not"
+    assert contractions_unpacker("I'm") == "I am"
 
 def social_tokenizer(tweet):
     """Returns the tokenized sentence using a tokenizer specially designed for social network content.
@@ -55,7 +61,6 @@ def social_tokenizer(tweet):
 
 
 def test_social_tokenizer():
-
     # TODO how to handle invalid unicode or leave it and use it as feature because indication of obfuscation
     assert social_tokenizer(tweets.loc[0, 'text']) == "RT @asredasmyhair : Feminists , take note . #FemFreeFriday #WomenAgainstFeminism http://t.co/J2HqzVJ8Cx"
     assert social_tokenizer(tweets.loc[1, 'text']) == "RT @AllstateJackie : Antis will stop treating blocks as trophies as soon as feminists stop treating blocks as arguments . đŸ \uf190 ¸ â ˜ • #GamerGate"
@@ -201,13 +206,16 @@ def test_remove_stopwords_capitals():
 
 # TODO documents and testing
 def lemmatization(tweet, nlp):
+    """Returns the lemma of the tweet."""
     lemmatizer = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)
     tweet = nlp(tweet)
     lemmatized = [lemmatizer(word.text.lower(), word.pos_)[0] for word in tweet]
 
     return " ".join(lemma for lemma in lemmatized)
 
+# TODO spell correct performs slow and poorly, need to investigate
 def spell_correcter(tokenized_tweets):
+
     from ekphrasis.classes.spellcorrect import SpellCorrector
     sp = SpellCorrector(corpus="english")
 

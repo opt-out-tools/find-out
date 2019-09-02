@@ -1,5 +1,4 @@
-import matplotlib.pyplot as plt
-
+import re
 from wordcloud import WordCloud
 from src.models.hatespeech.model_translearn_hatespeech import create_model
 from sklearn.metrics import f1_score, confusion_matrix
@@ -47,10 +46,10 @@ def draw_wordcloud(data):
 def density_of_curse_words(tweet):
     """Returns the density of curse words.
     Args:
-        tweet (str) :
+        tweet (str) : the tweet to be counted.
 
     Returns:
-        density (df) :
+        density (dict) : the curse words and their densities.
     """
 
     curse_words = ["fuck", "shit", "motherfucker", "crap", "ass", "bitch", "cunt"]
@@ -62,3 +61,25 @@ def density_of_curse_words(tweet):
     for curse_word in counts:
         counts[curse_word] = counts[curse_word]/number_of_words
     return counts
+
+
+def generate_ngrams(tweet, n):
+    """Returns the n-grams in a sentence.
+
+    Args:
+        tweet (str) : the tweet to be grammed.
+        n (int) : the number of grams, 2 = bigram, 3 = trigram.
+
+    Returns
+        bigrams (list) : a list of bigrams
+    """
+    tweet = tweet.lower()
+    tweet = re.sub(r'[^a-zA-Z0-9\s]', ' ', tweet)
+
+    # Break sentence in the token, remove empty tokens
+    tokens = [token for token in tweet.split(" ") if token != ""]
+
+    # Use the zip function to help us generate n-grams
+    # Concatentate the tokens into ngrams and return
+    ngrams = zip(*[tokens[i:] for i in range(n)])
+    return [" ".join(ngram) for ngram in ngrams]

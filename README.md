@@ -75,3 +75,11 @@ python -m pytest tests/test_nn_dataturks.py
 ```
 
 NB. this is not a permanent solution but will enable initial effective collaboration. If you have any thoughts or ideas on how to improve this, just email opt.out.tool@gmail.com
+
+Project Datasets
+--------------------
+
+aws_annotated - our annotations + hatespeech
+dataturks - obtained from dataturks crowdsource labeling
+hatespeech - obtained from Zeerak Waseem
+rapeglish - scraped from random rape threat generator by Emma Jane

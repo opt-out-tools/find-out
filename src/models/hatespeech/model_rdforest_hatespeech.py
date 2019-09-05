@@ -6,12 +6,12 @@ from sklearn.model_selection import train_test_split
 from src.data.preprocess.hatespeech.preprocess_rdforest_hatespeech import generate_tfidf_vectors
 from src.features.hatespeech.featureeng_rulesbased_hatespeech import combine_feature_space
 from src.features.hatespeech.featureseng_rdforest_hatespeech import contains_not_sexist_but
-from src.utils.normalize import normalize
+from src.utils.preprocess_text_helpers import normalizer
 
 
 data = pd.read_csv("../../../data/external/hatespeech/hs_data.csv")
 
-data['normalized'] = data['text'].apply(normalize)
+data['normalized'] = normalizer(data['text'])
 X = generate_tfidf_vectors(data['normalized'].to_list())['vectors']
 
 data['contains_not_sexist_but'] = data['text'].apply(lambda tweet: contains_not_sexist_but(tweet))

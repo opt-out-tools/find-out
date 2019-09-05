@@ -16,6 +16,7 @@ def create_connection(db_file):
 
     return None
 
+
 def create_table(conn, create_table_sql):
     """ create a table from the create_table_sql statement
     :param conn: Connection object

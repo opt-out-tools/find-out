@@ -31,7 +31,8 @@ def make_large_learning_function_matrix(data, labeling_function):
 
     Args:
         data (pandas df) : the text to be labeled with.
-        labeling_function (generator) : a generator labeling function to be performed on
+        labeling_function (generator) : a generator labeling function to be
+        performed on
         the text.
 
     Returns:
@@ -66,9 +67,13 @@ def get_names(generator):
     return names
 
 
-def analysis_of_weak_labeling(data, true_labels, labeling_functions,
-                              labeling_function_names,
-                              generator_labeling_functions):
+def analysis_of_weak_labeling(
+        data,
+        true_labels,
+        labeling_functions,
+        labeling_function_names,
+        generator_labeling_functions,
+):
     """Displays the summary of labeling functions.
 
     Args:
@@ -92,16 +97,25 @@ def analysis_of_weak_labeling(data, true_labels, labeling_functions,
     generator_labeling_function_matrix = np.empty((len(data), 1))
     names = []
     for labeling_function in generator_labeling_functions:
-        new_matrix, new_names = make_large_learning_function_matrix(data, labeling_function)
+        new_matrix, new_names = make_large_learning_function_matrix(
+            data, labeling_function
+        )
         generator_labeling_function_matrix = np.hstack(
-            (generator_labeling_function_matrix, new_matrix))
+            (generator_labeling_function_matrix, new_matrix)
+        )
         names = names + new_names
 
     concat_matrix = np.hstack(
-        (labeling_function_matrix, generator_labeling_function_matrix[:, 1:]))
+        (labeling_function_matrix, generator_labeling_function_matrix[:, 1:])
+    )
     true_labels = np.array(true_labels)
-    print(lf_summary(sparse.csr_matrix(concat_matrix), Y=true_labels,
-                     lf_names=labeling_function_names + names))
+    print(
+        lf_summary(
+            sparse.csr_matrix(concat_matrix),
+            Y=true_labels,
+            lf_names=labeling_function_names + names,
+        )
+    )
 
 
 def find_most_common_nouns(docs):

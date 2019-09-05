@@ -21,8 +21,9 @@ def contractions_unpacker(tweet):
     """
     contractions_list = contractions()
 
-    pattern = re.compile(r'\b(?:%s)\b' % '|'.join(contractions_list.keys()),
-                         flags=re.IGNORECASE)
+    pattern = re.compile(
+        r"\b(?:%s)\b" % "|".join(contractions_list.keys()), flags=re.IGNORECASE
+    )
 
     def replace(match):
         match = match.group(0).lower()
@@ -62,7 +63,7 @@ def punctuation_cleaner(tweet):
 
     """
     print(tweet)
-    return re.sub(r"\s[:,!.](?=\s)?", '', tweet)
+    return re.sub(r"\s[:,!.](?=\s)?", "", tweet)
 
 
 def lowercase(tweet):
@@ -90,8 +91,18 @@ def normalizer(tweets):
     """
     # TODO choose what normalize
     preprocesser = TextPreProcessor(
-        normalize=['url', 'email', 'percent', 'money', 'phone', 'user',
-                   'time', 'date', 'hashtag'])
+        normalize=[
+            "url",
+            "email",
+            "percent",
+            "money",
+            "phone",
+            "user",
+            "time",
+            "date",
+            "hashtag",
+        ]
+    )
     return tweets.apply(lambda tweet: preprocesser.pre_process_doc(tweet))
 
 
@@ -99,19 +110,21 @@ def escape_unicode(tweet):
     """Returns a tokenized tweet where the un-escaped unicode characters
     have been escaped."""
     return [
-        word.encode('utf-8').decode('unicode_escape') if re.findall(r'\\\\\w+',
-                                                                    word) != [] else word
-        for word in
-        tweet]
+        word.encode("utf-8").decode("unicode_escape")
+        if re.findall(r"\\\\\w+", word) != []
+        else word
+        for word in tweet
+    ]
 
 
 def replace_spaces(tweet):
     """Replaces the unicode characters for whitespaces and new lines
     with spaces."""
-    pattern = '(\\\\xa0)|(\\\\n)|(\\\\xc2)'
+    pattern = "(\\\\xa0)|(\\\\n)|(\\\\xc2)"
     return [
         re.sub(pattern, " ", word) if re.findall(pattern, word) != [] else word
-        for word in tweet]
+        for word in tweet
+    ]
 
 
 def remove_stopwords(tweet):
@@ -134,7 +147,10 @@ def lemmatization(tweet, nlp):
 # TODO spell correct performs slow and poorly, need to investigate
 def spell_correcter(tokenized_tweets):
     from ekphrasis.classes.spellcorrect import SpellCorrector
+
     spell_corrector = SpellCorrector(corpus="english")
 
     return tokenized_tweets.apply(
-        lambda tweet: [spell_corrector.correct(word) for word in tweet.split(" ")])
+        lambda tweet: [spell_corrector.correct(word) for word in
+                       tweet.split(" ")]
+    )

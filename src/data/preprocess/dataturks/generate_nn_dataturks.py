@@ -1,5 +1,6 @@
 from keras.preprocessing.text import Tokenizer
 
+
 def create_dictionary(data, n_words):
     """Prepares the corpus for the model and returns the Tokenizer
     object.

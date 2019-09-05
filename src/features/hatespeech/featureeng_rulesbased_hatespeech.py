@@ -128,8 +128,11 @@ def contains_bitch_cunt(tweet):
     adjectives = ["dumb", "fucking", "stupid", "greedy", "fuck", "dumbest",
                   "lying"]
     nouns = ["bitch", "cunt", "whore"]
-    insults = [rf"""^(?=.*\b{adjective}\b)(?=.*\b{noun}\b).*$""" for adjective
-               in adjectives for noun in nouns]
+    insults = [
+        rf"""^(?=.*\b{adjective}\b)(?=.*\b{noun}\b).*$"""
+        for adjective in adjectives
+        for noun in nouns
+    ]
 
     ABSTAIN = 0
     POSITIVE = 1
@@ -148,8 +151,10 @@ def contains_fuck_whore_same_sentence(tweet):
      """
     verbs = ["rape", "fuck"]
     nouns = ["whore", "women", "slut", "girl"]
-    insults = [rf"""^(?=.*\b{verb}\b)(?=.*\b{noun}\b).*$""" for verb in verbs
-               for noun in nouns]
+    insults = [
+        rf"""^(?=.*\b{verb}\b)(?=.*\b{noun}\b).*$""" for verb in verbs for noun
+        in nouns
+    ]
 
     abstain = 0
     positive = 1
@@ -168,12 +173,22 @@ def contains_women_stereotypes(tweet):
      """
     negation = ["cant", "cannot", "shouldnt"]
     nouns = ["whores?", "women", "sluts?", "girls?", "bitches?"]
-    actions = ["drive", "ref", "be president", "be in politics",
-               "be a politician", "play sports", "do maths"]
+    actions = [
+        "drive",
+        "ref",
+        "be president",
+        "be in politics",
+        "be a politician",
+        "play sports",
+        "do maths",
+    ]
 
-    insults = [rf"""^(?=.*\b{noun}\b)(?=.*\b{negate}\b)(?=.* \b{act}\b).*$"""
-               for act in actions for negate in negation
-               for noun in nouns]
+    insults = [
+        rf"""^(?=.*\b{noun}\b)(?=.*\b{negate}\b)(?=.* \b{act}\b).*$"""
+        for act in actions
+        for negate in negation
+        for noun in nouns
+    ]
 
     abstain = 0
     positive = 1

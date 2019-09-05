@@ -23,7 +23,7 @@ def create_table(conn, create_table_sql):
     :return:
     """
     try:
-        c = conn.cursor()
-        c.execute(create_table_sql)
-    except Error as e:
-        print(e)
+        conn = conn.cursor()
+        conn.execute(create_table_sql)
+    except Error as error:
+        print(error)

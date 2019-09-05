@@ -1,4 +1,7 @@
-def plot(self, model):
+import matplotlib.pyplot as plt
+
+
+def plot(model):
     """Plots the accuracy and loss of the validation and training."""
     history_dict = model.history.history
     history_dict.keys()
@@ -8,10 +11,6 @@ def plot(self, model):
     plot_accuracy(epochs, history_dict['acc'], history_dict['val_acc'])
     plt.clf()
     plot_loss(epochs, history_dict['loss'], history_dict['val_loss'])
-
-
-
-import matplotlib.pyplot as plt
 
 
 def plot_loss(epochs, loss, val_loss):

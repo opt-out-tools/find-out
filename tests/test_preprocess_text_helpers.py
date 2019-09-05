@@ -22,9 +22,9 @@ def test_contraction_unpack_case_agnostic():
     assert contractions_unpacker("I'm") == "I am"
 
 def test_social_tokenizer():
-    assert social_tokenizer("@blanchettswhore Sunday,paul :)tweet? cele,blanchetts :) whore...?") == "@blanchettswhore Sunday , paul :) tweet ? cele , blanchetts :) whore . . . ?"
-    assert social_tokenizer("LIKEWISE 14:40@Reni__Rinse who's f****N dumb idea was it to change Thor to a girl?") == "LIKEWISE 14:40 @Reni__Rinse who ' s f****N dumb idea was it to change Thor to a girl ?"
-    assert social_tokenizer(":-3;‑]O_o 3:‑) >.<") == ":-3 ;‑] O_o 3:‑) >.<"
+    assert tokenizer("@blanchettswhore Sunday,paul :)tweet? cele,blanchetts :) whore...?") == "@blanchettswhore Sunday , paul :) tweet ? cele , blanchetts :) whore . . . ?"
+    assert tokenizer("LIKEWISE 14:40@Reni__Rinse who's f****N dumb idea was it to change Thor to a girl?") == "LIKEWISE 14:40 @Reni__Rinse who ' s f****N dumb idea was it to change Thor to a girl ?"
+    assert tokenizer(":-3;‑]O_o 3:‑) >.<") == ":-3 ;‑] O_o 3:‑) >.<"
 
 def test_punctuation_cleaner_removes_colon():
     assert punctuation_cleaner(tokenized_tweets.loc[0, 'text']) == "RT @asredasmyhair Feminists take note #FemFreeFriday #WomenAgainstFeminism http://t.co/J2HqzVJ8Cx"

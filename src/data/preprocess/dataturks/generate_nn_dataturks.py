@@ -1,10 +1,12 @@
 from keras.preprocessing.text import Tokenizer
 
 def create_dictionary(data, n_words):
-    """Prepares the corpus for the model and returns the Tokenizer object.
+    """Prepares the corpus for the model and returns the Tokenizer
+    object.
     Args:
         data (pandas series) : The column of text to be classified.
-        n_words (int) : This argument will keep the most frequent n_words in the training data.
+        n_words (int) : This argument will keep the most frequent
+        n_words in the training data.
 
     Returns:
         tokenizer (Tokenizer) :

@@ -1,3 +1,6 @@
+"""
+Random forest study into the hatespeech dataset.
+"""
 import re
 
 def get_length_of_tweet(tweet):

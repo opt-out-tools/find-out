@@ -1,4 +1,4 @@
-from src.models import predict_nn_dataturks as model
+from src.models.dataturks import predict_nn_dataturks as model
 from src.data.preprocess.dataturks.generate_nn_dataturks import split
 
 path_to_data = "/data/external/dataturks/example.csv"

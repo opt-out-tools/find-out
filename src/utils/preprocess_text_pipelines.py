@@ -1,4 +1,4 @@
-from src.utils.domain_objects_test import create_tweets_df
+from tests.utils.domain_objects_test import create_tweets_df
 from src.utils.preprocess_text_helpers import (
     contractions_unpacker,
     tokenizer,

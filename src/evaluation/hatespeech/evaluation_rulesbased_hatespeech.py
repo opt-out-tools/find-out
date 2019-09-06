@@ -1,45 +1,51 @@
 import numpy as np
+from metal.analysis import lf_summary
 from scipy import sparse
 from torch.utils.tensorboard import SummaryWriter
-from metal.analysis import lf_summary
 
 
-def make_Ls_matrix(data, labeling_functions):
+def make_learning_function_matrix(data, labeling_functions):
     """Returns a labeling function matrix.
 
     Args:
         data (pandas df) : the text to be labeled.
-        labeling_functions (list) : a list of labeling functions to be performed on the text.
+        labeling_functions (list) : a list of labeling functions to be
+        performed on the text.
 
     Returns:
-        noisy_labels (ndarray) : an nd numpy array of the labels for the text.
+        noisy_labels (ndarray) : an nd numpy array of the labels for
+        the text.
 
     """
     noisy_labels = np.empty((len(data), len(labeling_functions)))
 
     for i, row in data.iterrows():
-        for j, lf in enumerate(labeling_functions):
-            noisy_labels[i][j] = lf(row.values[0].lower())
+        for j, labeling_function in enumerate(labeling_functions):
+            noisy_labels[i][j] = labeling_function(row.values[0].lower())
     return noisy_labels
 
 
-def using_generator_function_make_Ls_matrix(data, lf):
-    """Returns a labeling function matrix calculated using  generator functions.
+def make_large_learning_function_matrix(data, labeling_function):
+    """Returns a labeling function matrix calculated using  generator
+    functions.
 
     Args:
         data (pandas df) : the text to be labeled with.
-        lf (list) : a generator labeling function to be performed on the text.
+        labeling_function (generator) : a generator labeling function to be
+        performed on
+        the text.
 
     Returns:
-        noisy_labels (ndarray) : an nd numpy array of the labels for the text.
+        noisy_labels (ndarray) : an nd numpy array of the labels for t
+        he text.
     """
 
-    names = get_names(lf(""))
+    names = get_names(labeling_function(""))
 
     noisy_labels = np.empty((len(data), len(names)))
 
     for i, row in data.iterrows():
-        gen = lf(row.values[0].lower())
+        gen = labeling_function(row.values[0].lower())
         j = 0
         while j < len(names):
             noisy_labels[i][j] = next(gen)[0]
@@ -47,7 +53,9 @@ def using_generator_function_make_Ls_matrix(data, lf):
 
     return noisy_labels, names
 
+
 def get_names(generator):
+    """Returns the regex used in the labeling functions."""
     names = []
     j = 0
     while j < 1000:
@@ -58,36 +66,61 @@ def get_names(generator):
             break
     return names
 
-def analysis_of_weak_labeling(data, true_labels, labeling_functions, labeling_function_names, generator_labeling_functions):
+
+def analysis_of_weak_labeling(
+        data,
+        true_labels,
+        labeling_functions,
+        labeling_function_names,
+        generator_labeling_functions,
+):
     """Displays the summary of labeling functions.
 
     Args:
         data (pandas df) : the text to be labeled with.
         true_labels (pandas series) : the current labels of the data.
-        labeling_functions (list) : a list of labeling functions to be performed on the text.
-        labeling_function_names (list) : a list of the name of the labeling functions to be performed on the text.
-        generator_labeling_functions (list) : a list of labeling functions to be performed on the text.
+        labeling_functions (list) : a list of labeling functions to be
+        performed on the text.
+        labeling_function_names (list) : a list of the name of the
+        labeling functions to be performed on the text.
+        generator_labeling_functions (list) : a list of labeling
+         to be performed on the text.
 
     Returns:
-        Displays a summary of the labeling function's success on the text.
+        Displays a summary of the labeling function's success on the
+        text.
     """
     SummaryWriter()
-    labeling_function_matrix = make_Ls_matrix(data, labeling_functions)
+    labeling_function_matrix = make_learning_function_matrix(data,
+                                                             labeling_functions)
 
     generator_labeling_function_matrix = np.empty((len(data), 1))
     names = []
-    for lf in generator_labeling_functions:
-        new_matrix, new_names = using_generator_function_make_Ls_matrix(data, lf)
-        generator_labeling_function_matrix = np.hstack((generator_labeling_function_matrix, new_matrix))
+    for labeling_function in generator_labeling_functions:
+        new_matrix, new_names = make_large_learning_function_matrix(
+            data, labeling_function
+        )
+        generator_labeling_function_matrix = np.hstack(
+            (generator_labeling_function_matrix, new_matrix)
+        )
         names = names + new_names
 
-    concat_matrix = np.hstack((labeling_function_matrix, generator_labeling_function_matrix[:,1:]))
+    concat_matrix = np.hstack(
+        (labeling_function_matrix, generator_labeling_function_matrix[:, 1:])
+    )
     true_labels = np.array(true_labels)
-    print(lf_summary(sparse.csr_matrix(concat_matrix), Y=true_labels, lf_names=labeling_function_names + names))
+    print(
+        lf_summary(
+            sparse.csr_matrix(concat_matrix),
+            Y=true_labels,
+            lf_names=labeling_function_names + names,
+        )
+    )
 
 
 def find_most_common_nouns(docs):
-    """Returns the a descending order sorted list of nouns and their frequencies.
+    """Returns the a descending order sorted list of nouns and their
+    frequencies.
 
     Args:
         docs (list of spacy docs) :
@@ -96,9 +129,8 @@ def find_most_common_nouns(docs):
         sorted (list of tuples):
     """
 
-
     nouns = [str(chunk) for doc in docs for chunk in doc.noun_chunks]
 
     frequencies = [(word, nouns.count(word)) for word in set(nouns)]
 
-    return sorted(set(frequencies), key=lambda x: x[1], reverse = True)
+    return sorted(set(frequencies), key=lambda x: x[1], reverse=True)

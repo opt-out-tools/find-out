@@ -1,14 +1,15 @@
 import pytest
 
-from src.data.collect.metoo.get_network_metoo import \
-    create_twitter_api_connection, read_json
+from src.data.collect.metoo.get_network_metoo import (
+    create_twitter_api_connection,
+    read_json,
+)
 
 
 def test_throws_exception_if_file_not_found():
     with pytest.raises(FileNotFoundError) as fnf:
         read_json("")
-    assert str(
-        fnf.value) == "The path to your twitter credentials is not correct."
+    assert str(fnf.value) == "The path to your twitter credentials is not correct."
 
 
 def test_raises_exception_if_incorrect_credentials():
@@ -22,6 +23,7 @@ def test_raises_exception_if_incorrect_credentials():
             }
         )
     assert str(e.value) == "Failed to send request, invalid credentials."
+
 
 # TODO finish mocking/testing gather_tweets
 # def test_api_call():

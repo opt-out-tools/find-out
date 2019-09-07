@@ -53,7 +53,7 @@ Project Organization
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize_model_datasetname.py
     │
-    └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
+    └── .pylintrc           <- pylint file for formatting
 
 
 --------
@@ -78,8 +78,10 @@ NB. this is not a permanent solution but will enable initial effective collabora
 
 Project Datasets
 --------------------
-
+The text must be under the column head **text** and the labels under the column head **label**.
+```
 aws_annotated - our annotations + hatespeech
 dataturks - obtained from dataturks crowdsource labeling
 hatespeech - obtained from Zeerak Waseem
 rapeglish - scraped from random rape threat generator by Emma Jane
+```

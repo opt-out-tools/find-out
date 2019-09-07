@@ -129,8 +129,7 @@ def replace_spaces(tweet):
 
 def remove_stopwords(tweet):
     """Returns a string of words with stop words removed."""
-    return " ".join(
-        word for word in tweet.split(" ") if word not in stopwords())
+    return " ".join(word for word in tweet.split(" ") if word not in stopwords())
 
 
 # TODO documents and testing
@@ -138,8 +137,7 @@ def lemmatization(tweet, nlp):
     """Returns the lemma of the tweet."""
     lemmatizer = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)
     tweet = nlp(tweet)
-    lemmatized = [lemmatizer(word.text.lower(), word.pos_)[0] for word in
-                  tweet]
+    lemmatized = [lemmatizer(word.text.lower(), word.pos_)[0] for word in tweet]
 
     return " ".join(lemma for lemma in lemmatized)
 
@@ -151,6 +149,5 @@ def spell_correcter(tokenized_tweets):
     spell_corrector = SpellCorrector(corpus="english")
 
     return tokenized_tweets.apply(
-        lambda tweet: [spell_corrector.correct(word) for word in
-                       tweet.split(" ")]
+        lambda tweet: [spell_corrector.correct(word) for word in tweet.split(" ")]
     )

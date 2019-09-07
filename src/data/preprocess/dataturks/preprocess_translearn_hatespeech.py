@@ -1,16 +1,16 @@
-from keras.preprocessing.text import Tokenizer
-from keras.utils.data_utils import get_file
 from os.path import expanduser, exists
 from zipfile import ZipFile
+
+import keras
 import numpy as np
 import pandas as pd
-import keras
-import pickle
+from keras.preprocessing.text import Tokenizer
+from keras.utils.data_utils import get_file
 
-KERAS_DATASETS_DIR = expanduser('~/.keras/datasets/')
-GLOVE_ZIP_FILE_URL = 'http://nlp.stanford.edu/data/glove.840B.300d.zip'
-GLOVE_ZIP_FILE = 'glove.840B.300d.zip'
-GLOVE_FILE = 'glove.840B.300d.txt'
+KERAS_DATASETS_DIR = expanduser("~/.keras/datasets/")
+GLOVE_ZIP_FILE_URL = "http://nlp.stanford.edu/data/glove.840B.300d.zip"
+GLOVE_ZIP_FILE = "glove.840B.300d.zip"
+GLOVE_FILE = "glove.840B.300d.txt"
 EMBEDDING_DIM = 300
 
 
@@ -25,7 +25,8 @@ def create_dictionary(data, n_words):
     """Prepares the corpus for the model and returns the Tokenizer object.
     Args:
         data (pandas series) : The column of text to be classified.
-        n_words (int) : This argument will keep the most frequent n_words in the training data.
+        n_words (int) : This argument will keep the most frequent n_words in the
+        training data.
 
     Returns:
         tokenizer (Tokenizer) :
@@ -60,14 +61,14 @@ def get_embeddings():
     embeddings_index = {}
     file = KERAS_DATASETS_DIR + GLOVE_FILE
 
-    with open(file, encoding='utf-8') as f:
+    with open(file, encoding="utf-8") as f:
         for line in f:
-            values = line.split(' ')
+            values = line.split(" ")
             word = values[0]
-            embedding = np.asarray(values[1:], dtype='float32')
+            embedding = np.asarray(values[1:], dtype="float32")
             embeddings_index[word] = embedding
 
-    print('Word embeddings: %d' % len(embeddings_index))
+    print("Word embeddings: %d" % len(embeddings_index))
     return embeddings_index
 
 
@@ -82,7 +83,9 @@ def get_embedding_matrix(embeddings_index, word_index, max_nb_words):
         if embedding_vector is not None:
             word_embedding_matrix[i] = embedding_vector
 
-    print('Null word embeddings: %d' % np.sum(np.sum(word_embedding_matrix, axis=1) == 0))
+    print(
+        "Null word embeddings: %d" % np.sum(np.sum(word_embedding_matrix, axis=1) == 0)
+    )
     return word_embedding_matrix
 
 
@@ -95,7 +98,9 @@ def init_embeddings(w_index, max_nb_words):
     else:
         # Prepare embedding matrix to be used in Embedding Layer
         embeddings_index = get_embeddings()
-        word_embedding_matrix = get_embedding_matrix(embeddings_index, w_index, max_nb_words)
+        word_embedding_matrix = get_embedding_matrix(
+            embeddings_index, w_index, max_nb_words
+        )
         np.save(cache_filename, word_embedding_matrix)
     return word_embedding_matrix
 
@@ -107,9 +112,10 @@ def get_word_index(tokenizer):
 
     return word_index
 
-def create_NN_sets(path_to_data,  vocab_size):
+
+def create_NN_sets(path_to_data, vocab_size):
     data = pd.read_csv(path_to_data)
-    corpus_vocabulary = create_dictionary(data['text'], vocab_size)
+    corpus_vocabulary = create_dictionary(data["text"], vocab_size)
 
     train, dev, test = split(data)
     x_train, y_train = prepare_data(train, corpus_vocabulary)
@@ -124,10 +130,12 @@ def create_NN_sets(path_to_data,  vocab_size):
 
 
 def prepare_data(data, corpus_vocabulary):
-    text = data['text']
-    label = data['label']
+    text = data["text"]
+    label = data["label"]
 
     data_sequences = corpus_vocabulary.texts_to_sequences(text.values)
-    padded_data = keras.preprocessing.sequence.pad_sequences(data_sequences, padding='post', maxlen=140)
+    padded_data = keras.preprocessing.sequence.pad_sequences(
+        data_sequences, padding="post", maxlen=140
+    )
 
     return padded_data, label

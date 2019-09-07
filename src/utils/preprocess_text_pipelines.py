@@ -1,14 +1,11 @@
-from src.utils.preprocess_text_helpers import (
-    contractions_unpacker,
-    tokenizer,
-    remove_stopwords,
-    normalizer,
-    punctuation_cleaner,
-)
 from typing import Callable, List
 
-class TextPipeline:
+from src.utils.preprocess_text_helpers import (contractions_unpacker, tokenizer,
+                                               remove_stopwords, normalizer,
+                                               punctuation_cleaner, )
 
+
+class TextPipeline:
     def __init__(self):
         self._processors: List[Callable[[str], str]] = []
 
@@ -66,7 +63,6 @@ def normalize(dataframe):
     return dataframe
 
 
-
 def tokenize(dataframe):
     """Returns tokenized text in string format.
 
@@ -86,5 +82,3 @@ def tokenize(dataframe):
         lambda tweet: pipeline.process_text(tweet)
     )
     return dataframe
-
-

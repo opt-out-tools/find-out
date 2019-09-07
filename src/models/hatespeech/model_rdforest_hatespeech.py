@@ -52,10 +52,9 @@ clf = RandomForestClassifier(
 clf.fit(X_train, y_train)
 
 feature_names = generate_tfidf_vectors(data["normalized"].to_list())[
-                    "feature_names"
-                ] + ["contains_not_sexist_but"]
-feature_imp = pd.Series(clf.feature_importances_,
-                        index=feature_names).sort_values(
+    "feature_names"
+] + ["contains_not_sexist_but"]
+feature_imp = pd.Series(clf.feature_importances_, index=feature_names).sort_values(
     ascending=False
 )
 

@@ -8,8 +8,7 @@ import keras
 import pandas as pd
 import tensorflow as tf
 
-from src.data.preprocess.dataturks.generate_nn_dataturks import split, \
-    create_dictionary
+from src.data.preprocess.dataturks.generate_nn_dataturks import split, create_dictionary
 
 
 def build(path_to_data, text_column_name, label_column_name, hyperparameters):
@@ -52,8 +51,7 @@ def build(path_to_data, text_column_name, label_column_name, hyperparameters):
 
     model.summary()
 
-    model.compile(optimizer="adam", loss="binary_crossentropy",
-                  metrics=["acc"])
+    model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["acc"])
 
     split_val = int(len(x_train) / 4)  # number of comments halved
 

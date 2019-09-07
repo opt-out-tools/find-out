@@ -125,8 +125,7 @@ def contains_bitch_cunt(tweet):
     Returns:
         1 or 0 (int)  : The label.
     """
-    adjectives = ["dumb", "fucking", "stupid", "greedy", "fuck", "dumbest",
-                  "lying"]
+    adjectives = ["dumb", "fucking", "stupid", "greedy", "fuck", "dumbest", "lying"]
     nouns = ["bitch", "cunt", "whore"]
     insults = [
         rf"""^(?=.*\b{adjective}\b)(?=.*\b{noun}\b).*$"""
@@ -134,11 +133,11 @@ def contains_bitch_cunt(tweet):
         for noun in nouns
     ]
 
-    ABSTAIN = 0
-    POSITIVE = 1
+    abstain = 0
+    positive = 1
 
     for insult in insults:
-        yield POSITIVE if re.search(insult, tweet) else ABSTAIN, insult
+        yield positive if re.search(insult, tweet) else abstain, insult
 
 
 def contains_fuck_whore_same_sentence(tweet):
@@ -152,14 +151,13 @@ def contains_fuck_whore_same_sentence(tweet):
     verbs = ["rape", "fuck"]
     nouns = ["whore", "women", "slut", "girl"]
     insults = [
-        rf"""^(?=.*\b{verb}\b)(?=.*\b{noun}\b).*$""" for verb in verbs for noun
-        in nouns
+        rf"""^(?=.*\b{verb}\b)(?=.*\b{noun}\b).*$""" for verb in verbs for noun in nouns
     ]
 
     abstain = 0
     positive = 1
 
-    for i, insult in enumerate(insults):
+    for insult in insults:
         yield positive if re.search(insult, tweet) else abstain, insult
 
 
@@ -173,15 +171,8 @@ def contains_women_stereotypes(tweet):
      """
     negation = ["cant", "cannot", "shouldnt"]
     nouns = ["whores?", "women", "sluts?", "girls?", "bitches?"]
-    actions = [
-        "drive",
-        "ref",
-        "be president",
-        "be in politics",
-        "be a politician",
-        "play sports",
-        "do maths",
-    ]
+    actions = ["drive", "ref", "be president", "be in politics", "be a politician",
+               "play sports", "do maths"]
 
     insults = [
         rf"""^(?=.*\b{noun}\b)(?=.*\b{negate}\b)(?=.* \b{act}\b).*$"""

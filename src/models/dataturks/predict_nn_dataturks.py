@@ -8,12 +8,10 @@ import keras
 import pandas as pd
 from keras.models import load_model
 
-from src.data.preprocess.dataturks.generate_nn_dataturks import \
-    create_dictionary
+from src.data.preprocess.dataturks.generate_nn_dataturks import create_dictionary
 
 
-def predict(sentence, path_to_model, path_to_data, text_column_name,
-            vocab_size):
+def predict(sentence, path_to_model, path_to_data, text_column_name, vocab_size):
     """Returns a sentiment score.
 
     Args:

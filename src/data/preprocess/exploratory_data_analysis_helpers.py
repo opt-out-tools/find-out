@@ -1,25 +1,49 @@
 import re
+
 import pandas as pd
 
 
 def density_of_curse_words_in_sentence(tweet):
-    """Returns the density of top 20 curse words, taken from Wang, Wenbo,  et  al.  "Cursing  in englishon  twitter."
+    """Returns the density of top 20 curse words, taken from Wang, Wenbo,  et  al.
+    "Cursing  in englishon  twitter."
     The method needs the punctuation to be removed.
     Args:
         tweet (str) : the tweet to be counted.
     Returns:
         density (dict) : the curse words and their densities.
     """
-    curse_words = ["fuck", "shit", "ass", "bitch", "nigga", "hell", "whore", "dick", "piss", "pussy", "slut", "puta",
-                   "tit", "damn", "fag", "cunt", "cum", "cock", "blowjob"]
+    curse_words = [
+        "fuck",
+        "shit",
+        "ass",
+        "bitch",
+        "nigga",
+        "hell",
+        "whore",
+        "dick",
+        "piss",
+        "pussy",
+        "slut",
+        "puta",
+        "tit",
+        "damn",
+        "fag",
+        "cunt",
+        "cum",
+        "cock",
+        "blowjob",
+    ]
 
     # here we are going to use above words as roots in dictionary and then
     # as dictionary value add them and their plurals in order to make magic happen
     # I'm just adding plural but you can easily extend it with synonyms and such
 
-    curse_roots = {curse_word: [curse_word, f'{curse_word}s'] for curse_word in curse_words}
+    curse_roots = {
+        curse_word: [curse_word, f"{curse_word}s"] for curse_word in curse_words
+    }
 
-    # now we create look_up dictionary which is a reverse of above (all values become keys, and key become values)
+    # now we create look_up dictionary which is a reverse of above (all values become
+    # keys, and key become values)
     lookup = {}
     for key, values in curse_roots.items():
         for value in values:
@@ -42,31 +66,39 @@ def density_of_curse_words_in_sentence(tweet):
         counts[key] /= len(tweet_words)
     return counts
 
+
 def test_density_of_curse_words_in_sentence():
-    tweet = "fuck shit ass bitch nigga hell whore dick piss pussy slut puta tit damn fag cunt cum cock blowjob"
+    tweet = "fuck shit ass bitch nigga hell whore dick piss pussy slut puta tit damn " \
+            "fag cunt cum cock blowjob"
     assert all(density_of_curse_words_in_sentence(tweet))
+
 
 def test_density_of_curse_words_with_puncuation():
     tweet = "fuck!! fuck, fuck. "
-    assert density_of_curse_words_in_sentence(tweet)['fuck'] == 0
+    assert density_of_curse_words_in_sentence(tweet)["fuck"] == 0
+
 
 def test_density_of_curse_words_with_plurals():
     tweet = "fucks fucks fucks fuck"
-    assert density_of_curse_words_in_sentence(tweet)['fuck'] == 1.0
+    assert density_of_curse_words_in_sentence(tweet)["fuck"] == 1.0
 
-def density_of_curse_words_in_total_corpus(df, dataset_title):
+
+def density_of_curse_words_in_total_corpus(dataframe, dataset_title):
     """Returns density of curse words across an entire corpus
 
       Args:
-        df (pandas df) : the df with the tweets to be counted.
+        dataframe (pandas df) : the df with the tweets to be counted.
 
     Returns:
         df (pandas df) : the curse words and their densities.
 
     """
-    df['curse_words'] = df['text'].apply(lambda tweet: density_of_curse_words_in_sentence(tweet))
-    count = pd.DataFrame(list(df['curse_words'])).T.sum(axis=1)/len(df)
-    return pd.DataFrame({dataset_title: count}, index = count.index)
+    dataframe["curse_words"] = dataframe["text"].apply(
+        lambda tweet: density_of_curse_words_in_sentence(tweet)
+    )
+    count = pd.DataFrame(list(dataframe["curse_words"])).T.sum(axis=1) / len(dataframe)
+    return pd.DataFrame({dataset_title: count}, index=count.index)
+
 
 def generate_ngrams(tweet, n):
     """Returns the n-grams in a sentence.
@@ -80,7 +112,7 @@ def generate_ngrams(tweet, n):
 
     """
     tweet = tweet.lower()
-    tweet = re.sub(r'[^a-zA-Z0-9\s]', ' ', tweet)
+    tweet = re.sub(r"[^a-zA-Z0-9\s]", " ", tweet)
 
     # Break sentence in the token, remove empty tokens
     tokens = [token for token in tweet.split(" ") if token != ""]
@@ -89,6 +121,7 @@ def generate_ngrams(tweet, n):
     # Concatentate the tokens into ngrams and return
     ngrams = zip(*[tokens[i:] for i in range(n)])
     return [" ".join(ngram) for ngram in ngrams]
+
 
 def find_most_common_nouns(docs):
     """Returns a descending order sorted list of nouns and their frequencies.
@@ -104,7 +137,7 @@ def find_most_common_nouns(docs):
 
     frequencies = [(word, nouns.count(word)) for word in set(nouns)]
 
-    return sorted(set(frequencies), key=lambda x: x[1], reverse = True)
+    return sorted(set(frequencies), key=lambda x: x[1], reverse=True)
 
 
 def contains_bigram(ngram, adjectives, nouns):
@@ -129,10 +162,10 @@ def count_pejorative_bigrams(bigrams):
         counts (list of tuples) :
 
     """
-    bigrams_counts = [bigrams[i].value_counts() for i in range(0,len(bigrams))]
+    bigrams_counts = [bigrams[i].value_counts() for i in range(0, len(bigrams))]
     counts = []
-    for j in range(0,len(bigrams_counts)):
-         for i,count in enumerate(bigrams_counts[j]):
+    for j in range(0, len(bigrams_counts)):
+        for i, count in enumerate(bigrams_counts[j]):
             counts.append((bigrams_counts[j].index.values[i], count))
 
     return counts

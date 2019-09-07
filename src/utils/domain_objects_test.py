@@ -24,7 +24,8 @@ def create_tokenized_tweets_df():
         "soon as feminists stop treating blocks as arguments . đŸ \uf190 ¸ â "
         "˜ • #GamerGate",
         "@MGTOWKnight @FactsVsOpinion . . . cue the NAFALT in 3 . . 2 . . . "
-        "" "1 . . .",
+        ""
+        "1 . . .",
         "RT @baum_erik : Lol I ' m not surprised these 2 accounts blocked me "
         "@femfreq #FemiNazi #Gamergate & @MomsAgainstWWE #ParanoidParent "
         "http://t.câ€¦",

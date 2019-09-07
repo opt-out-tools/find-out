@@ -3,22 +3,15 @@ import json
 import click
 import mock
 import pandas as pd
-import pytest
 import tweepy
 
 
 @click.command()
-@click.option(
-    "--path_to_creds", "-creds", required=True,
-    help="path to twitter credentials"
-)
+@click.option("--path_to_creds", "-creds", required=True,
+              help="path to twitter credentials")
 @click.option("--path_to_ids", "-ids", required=True, help="path to tweet ids")
-@click.option(
-    "--path_to_output",
-    "-o",
-    required=True,
-    help="path to where the tweets should be written to",
-)
+@click.option("--path_to_output", "-o", required=True,
+              help="path to where the tweets should be written to", )
 def main(path_to_creds, path_to_ids, path_to_output):
     """ Runs the functions that enable tweets to be gathered by id and saved
     to csv. """
@@ -39,8 +32,7 @@ def read_json(path):
         file.close()
 
     except FileNotFoundError:
-        raise FileNotFoundError(
-            "The path to your twitter credentials is not correct.")
+        raise FileNotFoundError("The path to your twitter credentials is not correct.")
 
     return creds
 
@@ -50,8 +42,7 @@ def create_twitter_api_connection(creds):
 
     auth = tweepy.OAuthHandler(creds["CONSUMER_KEY"], creds["CONSUMER_SECRET"])
     auth.set_access_token(creds["ACCESS_TOKEN"], creds["ACCESS_SECRET"])
-    api = tweepy.API(auth, wait_on_rate_limit=True,
-                     wait_on_rate_limit_notify=True)
+    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     try:
         api.me()
@@ -125,8 +116,7 @@ def write_to_disk(tweets, save_headers, path_to_output):
     ]
 
     dataframe = pd.DataFrame(tweets, columns=tweet_object_keys)
-    dataframe.to_csv(path_to_output, mode="a", index=False,
-                     header=save_headers)
+    dataframe.to_csv(path_to_output, mode="a", index=False, header=save_headers)
     print("Saved to file")
 
 
@@ -134,5 +124,3 @@ def test_read_json_returns_dict():
     with mock.patch("builtins.open", mock.mock_open(read_data="{}")):
         credentials = read_json(mock.mock_open)
     assert isinstance(credentials, dict)
-
-

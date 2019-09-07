@@ -37,8 +37,9 @@ def test_create_dictionary_removes_Unicode(create_dataset_vocabulary):
 #     counts = sorted([(word, corpus.count(word)) for word in set(corpus)], key=lambda t: t[1], reverse=True)
 #     print(counts[0])
 
+
 def proportion(df, label):
-    df.loc[df['label'] == label, 'label'].count() / len(df)
+    df.loc[df["label"] == label, "label"].count() / len(df)
 
 
 def test_split_data_is_representative_of_underlying_distribution(read_in_dataset):
@@ -63,13 +64,40 @@ def test_split_data_is_representative_of_underlying_distribution(read_in_dataset
 
 
 def test_basic_negative():
-    assert model.predict("You are a bitch", path_to_model, path_to_data, 'content', 10000) >= 0.5
-    assert model.predict("Bitch suck dick", path_to_model, path_to_data, 'content', 10000) >= 0.5
-    assert model.predict("I hate you", path_to_model, path_to_data, 'content', 10000) >= 0.5
+    assert (
+        model.predict("You are a bitch", path_to_model, path_to_data, "content", 10000)
+        >= 0.5
+    )
+    assert (
+        model.predict("Bitch suck dick", path_to_model, path_to_data, "content", 10000)
+        >= 0.5
+    )
+    assert (
+        model.predict("I hate you", path_to_model, path_to_data, "content", 10000)
+        >= 0.5
+    )
 
 
 def test_basic_positive():
-    assert model.predict("You are a lovely person", path_to_model, path_to_data, 'content', 10000) < 0.5
-    assert model.predict("The sun shines from your eyes", path_to_model, path_to_data, 'content', 10000) < 0.5
-    assert model.predict("I love you so much", path_to_model, path_to_data, 'content', 10000) < 0.5
-
+    assert (
+        model.predict(
+            "You are a lovely person", path_to_model, path_to_data, "content", 10000
+        )
+        < 0.5
+    )
+    assert (
+        model.predict(
+            "The sun shines from your eyes",
+            path_to_model,
+            path_to_data,
+            "content",
+            10000,
+        )
+        < 0.5
+    )
+    assert (
+        model.predict(
+            "I love you so much", path_to_model, path_to_data, "content", 10000
+        )
+        < 0.5
+    )

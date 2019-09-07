@@ -67,13 +67,8 @@ def get_names(generator):
     return names
 
 
-def analysis_of_weak_labeling(
-        data,
-        true_labels,
-        labeling_functions,
-        labeling_function_names,
-        generator_labeling_functions,
-):
+def analysis_of_weak_labeling(data, true_labels, labeling_functions,
+                              labeling_function_names, generator_labeling_functions):
     """Displays the summary of labeling functions.
 
     Args:
@@ -91,8 +86,7 @@ def analysis_of_weak_labeling(
         text.
     """
     SummaryWriter()
-    labeling_function_matrix = make_learning_function_matrix(data,
-                                                             labeling_functions)
+    labeling_function_matrix = make_learning_function_matrix(data, labeling_functions)
 
     generator_labeling_function_matrix = np.empty((len(data), 1))
     names = []
@@ -116,21 +110,3 @@ def analysis_of_weak_labeling(
             lf_names=labeling_function_names + names,
         )
     )
-
-
-def find_most_common_nouns(docs):
-    """Returns the a descending order sorted list of nouns and their
-    frequencies.
-
-    Args:
-        docs (list of spacy docs) :
-
-    Return:
-        sorted (list of tuples):
-    """
-
-    nouns = [str(chunk) for doc in docs for chunk in doc.noun_chunks]
-
-    frequencies = [(word, nouns.count(word)) for word in set(nouns)]
-
-    return sorted(set(frequencies), key=lambda x: x[1], reverse=True)

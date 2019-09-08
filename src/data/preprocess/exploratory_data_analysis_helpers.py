@@ -141,17 +141,21 @@ def find_most_common_nouns(docs):
 
     return sorted(set(frequencies), key=lambda x: x[1], reverse=True)
 
+
 def contains_bigram(ngram, adjectives, nouns):
     """Returns the bigrams that match the two regex patterns, adjectives and nouns."""
 
-    bigrams_patterns = [rf"""^(?=.*\b{adjective}\b)(?=.*\b{noun}\b).*$"""
-                        for adjective in adjectives for noun in nouns
-                        ]
+    bigrams_patterns = [
+        rf"""^(?=.*\b{adjective}\b)(?=.*\b{noun}\b).*$"""
+        for adjective in adjectives
+        for noun in nouns
+    ]
     for pattern in bigrams_patterns:
         if re.search(pattern, ngram):
             return ngram
 
     return None
+
 
 def count_pejorative_bigrams(bigrams):
     """Returns the pejorative terms and the counts.

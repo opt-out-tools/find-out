@@ -67,8 +67,13 @@ def get_names(generator):
     return names
 
 
-def analysis_of_weak_labeling(data, true_labels, labeling_functions,
-                              labeling_function_names, generator_labeling_functions):
+def analysis_of_weak_labeling(
+    data,
+    true_labels,
+    labeling_functions,
+    labeling_function_names,
+    generator_labeling_functions,
+):
     """Displays the summary of labeling functions.
 
     Args:

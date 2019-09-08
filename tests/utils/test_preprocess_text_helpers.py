@@ -12,10 +12,10 @@ from src.utils.preprocess_text_helpers import replace_spaces
 from src.utils.preprocess_text_helpers import tokenizer
 from src.utils.stopwords_and_contractions import contractions
 
-tweets = create_tweets_df()
-tokenized_tweets = create_tokenized_tweets_df()
+TWEETS = create_tweets_df()
+TOKENIZED_TWEETS = create_tokenized_tweets_df()
 
-df_contractions = pd.DataFrame(
+CONTRACTIONS_DATAFRAME = pd.DataFrame(
     {
         "contraction": list(contractions().keys()),
         "unpacked": list(contractions().values()),
@@ -24,18 +24,19 @@ df_contractions = pd.DataFrame(
 
 
 def test_contraction_unpacking_all():
-    df_contractions["unpacked_values"] = df_contractions["contraction"].apply(
-        lambda contra: contractions_unpacker(contra)
+    CONTRACTIONS_DATAFRAME["unpacked_values"] = CONTRACTIONS_DATAFRAME[
+        "contraction"
+    ].apply(contractions_unpacker)
+    assert (
+        CONTRACTIONS_DATAFRAME["unpacked_values"].all()
+        == CONTRACTIONS_DATAFRAME["unpacked"].all()
     )
-    assert df_contractions["unpacked_values"].all() == df_contractions["unpacked"].all()
 
 
 def test_contraction_unpack_in_sentence():
-    tweets["contractions"] = tweets["text"].apply(
-        lambda tweet: contractions_unpacker(tweet)
-    )
+    TWEETS["contractions"] = TWEETS["text"].apply(contractions_unpacker)
     assert (
-        tweets.loc[3, "contractions"]
+        TWEETS.loc[3, "contractions"]
         == "RT @baum_erik: Lol I am not surprised these 2 accounts blocked me "
         "@femfreq #FemiNazi #Gamergate &amp; @MomsAgainstWWE "
         "#ParanoidParent http://t.câ€¦"
@@ -49,7 +50,8 @@ def test_contraction_unpack_case_agnostic():
 
 def test_social_tokenizer():
     tweet1 = "@blanchettswhore Sunday,paul :)tweet? cele,blanchetts :) whore...?"
-    tweet2 = ("LIKEWISE 14:40@Reni__Rinse who's f****N dumb idea was it to change "
+    tweet2 = (
+        "LIKEWISE 14:40@Reni__Rinse who's f****N dumb idea was it to change "
         "Thor to a girl?"
     )
 
@@ -68,7 +70,7 @@ def test_social_tokenizer():
 
 def test_punctuation_cleaner_removes_colon():
     assert (
-        punctuation_cleaner(tokenized_tweets.loc[0, "text"])
+        punctuation_cleaner(TOKENIZED_TWEETS.loc[0, "text"])
         == "RT @asredasmyhair Feminists take note #FemFreeFriday "
         "#WomenAgainstFeminism http://t.co/J2HqzVJ8Cx"
     )
@@ -76,7 +78,7 @@ def test_punctuation_cleaner_removes_colon():
 
 def test_punctuation_cleaner_removes_fullstops():
     assert (
-        punctuation_cleaner(tokenized_tweets.loc[2, "text"])
+        punctuation_cleaner(TOKENIZED_TWEETS.loc[2, "text"])
         == "@MGTOWKnight @FactsVsOpinion cue the NAFALT in 3 2 1"
     )
 
@@ -93,7 +95,7 @@ def test_punctuation_cleaner_removes_exclamation_marks():
 
 def test_lowercase():
     assert (
-        lowercase(tokenized_tweets.loc[2, "text"])
+        lowercase(TOKENIZED_TWEETS.loc[2, "text"])
         == "@mgtowknight @factsvsopinion . . . "
         "cue the nafalt in 3 . . 2 . . . 1 . "
         ". ."
@@ -101,9 +103,9 @@ def test_lowercase():
 
 
 def test_normalize():
-    tweets["normalized"] = normalizer(tweets["text"])
+    TWEETS["normalized"] = normalizer(TWEETS["text"])
     assert (
-        tweets.loc[0, "normalized"]
+        TWEETS.loc[0, "normalized"]
         == "RT <user> : Feminists, take note. <hashtag> <hashtag> <url>"
     )
 

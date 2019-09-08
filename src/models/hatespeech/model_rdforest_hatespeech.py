@@ -16,20 +16,18 @@ from src.features.hatespeech.featureseng_rdforest_hatespeech import (
 )
 from src.utils.preprocess_text_helpers import normalizer
 
-data = pd.read_csv("../../../data/external/hatespeech/hs_data.csv")
+DATA = pd.read_csv("../../../DATA/external/hatespeech/hs_data.csv")
 
-data["normalized"] = normalizer(data["text"])
-X = generate_tfidf_vectors(data["normalized"].to_list())["vectors"]
+DATA["normalized"] = normalizer(DATA["text"])
+X = generate_tfidf_vectors(DATA["normalized"].to_list())["vectors"]
 
-data["contains_not_sexist_but"] = data["text"].apply(
-    lambda tweet: contains_not_sexist_but(tweet)
-)
-X = combine_feature_space(X, data["contains_not_sexist_but"].values)
+DATA["contains_not_sexist_but"] = DATA["text"].apply(contains_not_sexist_but)
+X = combine_feature_space(X, DATA["contains_not_sexist_but"].values)
 
-y = pd.get_dummies(data["annotation"])["misogynistic"]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+Y = pd.get_dummies(DATA["annotation"])["misogynistic"]
+X_TRAIN, X_TEST, Y_TRAIN, Y_TEST = train_test_split(X, Y, test_size=0.3)
 
-clf = RandomForestClassifier(
+CLF = RandomForestClassifier(
     bootstrap=True,
     class_weight=None,
     criterion="gini",
@@ -49,22 +47,22 @@ clf = RandomForestClassifier(
     warm_start=False,
 )
 
-clf.fit(X_train, y_train)
+CLF.fit(X_TRAIN, Y_TRAIN)
 
-feature_names = generate_tfidf_vectors(data["normalized"].to_list())[
-    "feature_names"
+FEATURE_NAMES = generate_tfidf_vectors(DATA["normalized"].to_list())[
+    "FEATURE_NAMES"
 ] + ["contains_not_sexist_but"]
-feature_imp = pd.Series(clf.feature_importances_, index=feature_names).sort_values(
-    ascending=False
-)
+FEATURE_IMPORTANCE = pd.Series(
+    CLF.feature_importances_, index=FEATURE_NAMES
+).sort_values(ascending=False)
 
-y_pred = clf.predict(X_test)
+Y_PRED = CLF.predict(X_TEST)
 
 # Model Accuracy, how often is the classifier correct?
-print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+print("Accuracy:", metrics.accuracy_score(Y_TEST, Y_PRED))
 
 # Creating a bar plot
-sns.barplot(x=feature_imp[0:10], y=feature_imp.index[0:10])
+sns.barplot(x=FEATURE_IMPORTANCE[0:10], y=FEATURE_IMPORTANCE.index[0:10])
 # Add labels to your graph
 plt.xlabel("Feature Importance Score")
 plt.ylabel("Features")

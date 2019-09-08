@@ -108,9 +108,7 @@ def normalizer(tweets):
 def escape_unicode(tweet):
     """Returns a tokenized tweet where the un-escaped unicode characters
     have been escaped."""
-    return [
-        word.encode("utf-8").decode("unicode_escape") for word in tweet
-    ]
+    return [word.encode("utf-8").decode("unicode_escape") for word in tweet]
 
 
 def replace_spaces(tweet):

@@ -8,10 +8,15 @@ def create_model(word_embedding_matrix, vocab_size):
 
     model = keras.Sequential()
     model.add(keras.layers.Embedding(vocab_size, 40))
-    # model.add(keras.layers.Embedding(in_dim, out_dim,
-    #                                  weights = [word_embedding_matrix],
-    #                                  input_length = 140,
-    #                                  trainable = False))
+    model.add(
+        keras.layers.Embedding(
+            in_dim,
+            out_dim,
+            weights=[word_embedding_matrix],
+            input_length=140,
+            trainable=False,
+        )
+    )
     model.add(keras.layers.Dropout(0.1))
     model.add(keras.layers.GlobalAveragePooling1D())
     model.add(keras.layers.Dropout(0.1))

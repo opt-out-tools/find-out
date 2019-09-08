@@ -89,7 +89,6 @@ def normalizer(tweets):
           normalized_tweet (str) : the normalized tweet.
 
     """
-    # TODO choose what normalize
     preprocesser = TextPreProcessor(
         normalize=[
             "url",
@@ -103,17 +102,14 @@ def normalizer(tweets):
             "hashtag",
         ]
     )
-    return tweets.apply(lambda tweet: preprocesser.pre_process_doc(tweet))
+    return tweets.apply(preprocesser.pre_process_doc)
 
 
 def escape_unicode(tweet):
     """Returns a tokenized tweet where the un-escaped unicode characters
     have been escaped."""
     return [
-        word.encode("utf-8").decode("unicode_escape")
-        if re.findall(r"\\\\\w+", word) != []
-        else word
-        for word in tweet
+        word.encode("utf-8").decode("unicode_escape") for word in tweet
     ]
 
 
@@ -132,7 +128,6 @@ def remove_stopwords(tweet):
     return " ".join(word for word in tweet.split(" ") if word not in stopwords())
 
 
-# TODO documents and testing
 def lemmatization(tweet, nlp):
     """Returns the lemma of the tweet."""
     lemmatizer = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)
@@ -142,7 +137,6 @@ def lemmatization(tweet, nlp):
     return " ".join(lemma for lemma in lemmatized)
 
 
-# TODO spell correct performs slow and poorly, need to investigate
 def spell_correcter(tokenized_tweets):
     from ekphrasis.classes.spellcorrect import SpellCorrector
 

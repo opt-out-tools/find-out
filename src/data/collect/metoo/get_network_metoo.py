@@ -4,14 +4,20 @@ import click
 import mock
 import pandas as pd
 import tweepy
+from tweepy import TweepError
 
 
 @click.command()
-@click.option("--path_to_creds", "-creds", required=True,
-              help="path to twitter credentials")
+@click.option(
+    "--path_to_creds", "-creds", required=True, help="path to twitter credentials"
+)
 @click.option("--path_to_ids", "-ids", required=True, help="path to tweet ids")
-@click.option("--path_to_output", "-o", required=True,
-              help="path to where the tweets should be written to", )
+@click.option(
+    "--path_to_output",
+    "-o",
+    required=True,
+    help="path to where the tweets should be written to",
+)
 def main(path_to_creds, path_to_ids, path_to_output):
     """ Runs the functions that enable tweets to be gathered by id and saved
     to csv. """
@@ -61,18 +67,18 @@ def gather_tweets(api, path_to_ids, path_to_output, starting_id_idx=0):
 
     tweets = []
     counter = 0
-    for n, row in ids.iloc[starting_id_idx:, :].iterrows():
-        if n < len(ids):
+    for index, row in ids.iloc[starting_id_idx:, :].iterrows():
+        if index < len(ids):
             try:
                 id_of_tweet = row["id"]
                 tweets.append(api.get_status(id_of_tweet)._json)
-                print(f"Tweet id # {n}", id_of_tweet)
+                print(f"Tweet id # {index}", id_of_tweet)
 
-            except:
+            except TweepError:
                 print(str(id_of_tweet) + " tweet does not exist anymore")
 
-            if n % 1000 == 0:
-                if n == 0:
+            if index % 1000 == 0:
+                if index == 0:
                     write_to_disk(tweets, True, path_to_output)
                 else:
                     write_to_disk(tweets, False, path_to_output)

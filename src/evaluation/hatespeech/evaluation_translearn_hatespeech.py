@@ -23,14 +23,15 @@ def get_f1score(model, test, y_test):
     print("Weighted F1:%f" % f1_score(y_test, y_pred, average="weighted"))
 
 
-def evaluate_best_model(
-        path_to_fine_tuned_model, x_test, y_test, word_embedding_matrix, vocab_size):
+def evaluate_best_model(path_to_fine_tuned_model, x_test, y_test,
+                        word_embedding_matrix, vocab_size):
     best_model = create_model(word_embedding_matrix, vocab_size)
     best_model.load_weights(path_to_fine_tuned_model)
     scores = best_model.evaluate(x_test, y_test, verbose=1)
     print(
         f"{best_model.metrics_names[1]}: {scores[1] * 100:.2f}, "
-        f"{best_model.metrics_names[0]}: {scores[0]:.2f}")
+        f"{best_model.metrics_names[0]}: {scores[0]:.2f}"
+    )
 
     get_f1score(best_model, x_test, y_test)
 

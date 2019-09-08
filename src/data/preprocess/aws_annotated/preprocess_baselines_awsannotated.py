@@ -7,8 +7,9 @@ from sklearn.naive_bayes import MultinomialNB
 
 def split_data(path):
     corpus = pd.read_csv(path)
-    return train_test_split(corpus["text"], corpus["label"], test_size=0.33,
-                            random_state=42)
+    return train_test_split(
+        corpus["text"], corpus["label"], test_size=0.33, random_state=42
+    )
 
 
 if __name__ == "__main__":
@@ -20,7 +21,8 @@ if __name__ == "__main__":
     X_TRAIN, X_TEST, Y_TRAIN, Y_TEST = split_data(PATH)
 
     TRAIN_TFIDF = TFIDF_TRANSFORMER.fit_transform(
-        COUNT_VECTORIZER.fit_transform(X_TRAIN))
+        COUNT_VECTORIZER.fit_transform(X_TRAIN)
+    )
 
     MODEL = MultinomialNB().fit(TRAIN_TFIDF, Y_TRAIN)
 

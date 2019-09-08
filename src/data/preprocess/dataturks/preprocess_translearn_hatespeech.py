@@ -2,10 +2,10 @@ from os.path import expanduser, exists
 from zipfile import ZipFile
 
 import keras
-import numpy as np
-import pandas as pd
 from keras.preprocessing.text import Tokenizer
 from keras.utils.data_utils import get_file
+import numpy as np
+import pandas as pd
 
 KERAS_DATASETS_DIR = expanduser("~/.keras/datasets/")
 GLOVE_ZIP_FILE_URL = "http://nlp.stanford.edu/data/glove.840B.300d.zip"
@@ -59,10 +59,10 @@ def split(data):
 # Create embedding index
 def get_embeddings():
     embeddings_index = {}
-    file = KERAS_DATASETS_DIR + GLOVE_FILE
+    file_name = KERAS_DATASETS_DIR + GLOVE_FILE
 
-    with open(file, encoding="utf-8") as f:
-        for line in f:
+    with open(file_name, encoding="utf-8") as file:
+        for line in file:
             values = line.split(" ")
             word = values[0]
             embedding = np.asarray(values[1:], dtype="float32")
@@ -113,7 +113,7 @@ def get_word_index(tokenizer):
     return word_index
 
 
-def create_NN_sets(path_to_data, vocab_size):
+def create_nn_sets(path_to_data, vocab_size):
     data = pd.read_csv(path_to_data)
     corpus_vocabulary = create_dictionary(data["text"], vocab_size)
 

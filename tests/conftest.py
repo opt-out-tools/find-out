@@ -6,7 +6,7 @@ from src.data.preprocess.dataturks.generate_nn_dataturks import create_dictionar
 
 @pytest.fixture(scope="module")
 def read_in_dataset():
-    return pd.read_csv(os.getcwd() + "/data/external/dataturks/example.csv")
+    return pd.read_csv("../data/external/dataturks/example.csv")
 
 
 @pytest.fixture(scope="module")

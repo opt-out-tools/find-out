@@ -68,8 +68,10 @@ def density_of_curse_words_in_sentence(tweet):
 
 
 def test_density_of_curse_words_in_sentence():
-    tweet = "fuck shit ass bitch nigga hell whore dick piss pussy slut puta tit damn " \
-            "fag cunt cum cock blowjob"
+    tweet = (
+        "fuck shit ass bitch nigga hell whore dick piss pussy slut puta tit damn "
+        "fag cunt cum cock blowjob"
+    )
     assert all(density_of_curse_words_in_sentence(tweet))
 
 
@@ -94,18 +96,18 @@ def density_of_curse_words_in_total_corpus(dataframe, dataset_title):
 
     """
     dataframe["curse_words"] = dataframe["text"].apply(
-        lambda tweet: density_of_curse_words_in_sentence(tweet)
+        density_of_curse_words_in_sentence
     )
     count = pd.DataFrame(list(dataframe["curse_words"])).T.sum(axis=1) / len(dataframe)
     return pd.DataFrame({dataset_title: count}, index=count.index)
 
 
-def generate_ngrams(tweet, n):
+def generate_ngrams(tweet, ngram_number):
     """Returns the n-grams in a sentence.
 
     Args:
         tweet (str) : the tweet to be grammed.
-        n (int) : the number of grams, 2 = bigram, 3 = trigram.
+        ngram_number (int) : the number of grams, 2 = bigram, 3 = trigram.
 
     Returns
         bigrams (list) : a list of bigrams
@@ -119,7 +121,7 @@ def generate_ngrams(tweet, n):
 
     # Use the zip function to help us generate n-grams
     # Concatentate the tokens into ngrams and return
-    ngrams = zip(*[tokens[i:] for i in range(n)])
+    ngrams = zip(*[tokens[i:] for i in range(ngram_number)])
     return [" ".join(ngram) for ngram in ngrams]
 
 
@@ -139,18 +141,17 @@ def find_most_common_nouns(docs):
 
     return sorted(set(frequencies), key=lambda x: x[1], reverse=True)
 
-
 def contains_bigram(ngram, adjectives, nouns):
     """Returns the bigrams that match the two regex patterns, adjectives and nouns."""
-    match_obj_adjectives = re.search(adjectives, ngram)
-    match_obj_nouns = re.search(nouns, ngram)
-    try:
-        if match_obj_adjectives.group() != "" and match_obj_nouns.group() != "":
-            print("Found " + ngram)
-            return ngram
-    except:
-        pass
 
+    bigrams_patterns = [rf"""^(?=.*\b{adjective}\b)(?=.*\b{noun}\b).*$"""
+                        for adjective in adjectives for noun in nouns
+                        ]
+    for pattern in bigrams_patterns:
+        if re.search(pattern, ngram):
+            return ngram
+
+    return None
 
 def count_pejorative_bigrams(bigrams):
     """Returns the pejorative terms and the counts.
@@ -164,7 +165,7 @@ def count_pejorative_bigrams(bigrams):
     """
     bigrams_counts = [bigrams[i].value_counts() for i in range(0, len(bigrams))]
     counts = []
-    for j in range(0, len(bigrams_counts)):
+    for j in enumerate(bigrams_counts):
         for i, count in enumerate(bigrams_counts[j]):
             counts.append((bigrams_counts[j].index.values[i], count))
 

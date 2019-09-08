@@ -1,8 +1,12 @@
 from typing import Callable, List
 
-from src.utils.preprocess_text_helpers import (contractions_unpacker, tokenizer,
-                                               remove_stopwords, normalizer,
-                                               punctuation_cleaner, )
+from src.utils.preprocess_text_helpers import (
+    contractions_unpacker,
+    tokenizer,
+    remove_stopwords,
+    normalizer,
+    punctuation_cleaner,
+)
 
 
 class TextPipeline:
@@ -36,9 +40,7 @@ def clean(dataframe):
     pipeline.register_processor(punctuation_cleaner)
     pipeline.register_processor(remove_stopwords)
 
-    dataframe["cleaned"] = dataframe["text"].apply(
-        lambda tweet: pipeline.process_text(tweet)
-    )
+    dataframe["cleaned"] = dataframe["text"].apply(pipeline.process_text)
     return dataframe
 
 
@@ -54,11 +56,12 @@ def normalize(dataframe):
 
     """
     pipeline = TextPipeline()
-    pipeline.register_processor(clean)
+    pipeline.register_processor(contractions_unpacker)
+    pipeline.register_processor(tokenizer)
+    pipeline.register_processor(punctuation_cleaner)
+    pipeline.register_processor(remove_stopwords)
 
-    dataframe["cleaned"] = dataframe["text"].apply(
-        lambda tweet: pipeline.process_text(tweet)
-    )
+    dataframe["cleaned"] = dataframe["text"].apply(pipeline.process_text)
     dataframe["normalized"] = normalizer(dataframe["cleaned"])
     return dataframe
 
@@ -78,7 +81,5 @@ def tokenize(dataframe):
     pipeline.register_processor(contractions_unpacker)
     pipeline.register_processor(tokenizer)
 
-    dataframe["tokenized"] = dataframe["text"].apply(
-        lambda tweet: pipeline.process_text(tweet)
-    )
+    dataframe["tokenized"] = dataframe["text"].apply(pipeline.process_text)
     return dataframe

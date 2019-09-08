@@ -98,9 +98,9 @@ def contains_sexualized_rapeglih_vocab(tweet):
     Returns:
         1 or 0 (int)  : The label.
     """
-    rapeglish = r"""(unrapeable slut|cocktease|2hole|two-hole|whore of 
-    babylon|cockteaser|slutbag|slag|ladyslut|skank|cum-guzzler|leg-opener
-    |fuck-toy|fuck-toy|carpet muncher)"""
+    rapeglish = r"""(unrapeable slut|cocktease|2hole|two-hole|whore of babylon
+    |cockteaser|slutbag|slag|ladyslut|skank|cum-guzzler|leg-opener|fuck-toy|fuck-toy
+    |carpet muncher)"""
     return POSITIVE if re.search(rapeglish, tweet) else ABSTAIN
 
 
@@ -171,8 +171,15 @@ def contains_women_stereotypes(tweet):
      """
     negation = ["cant", "cannot", "shouldnt"]
     nouns = ["whores?", "women", "sluts?", "girls?", "bitches?"]
-    actions = ["drive", "ref", "be president", "be in politics", "be a politician",
-               "play sports", "do maths"]
+    actions = [
+        "drive",
+        "ref",
+        "be president",
+        "be in politics",
+        "be a politician",
+        "play sports",
+        "do maths",
+    ]
 
     insults = [
         rf"""^(?=.*\b{noun}\b)(?=.*\b{negate}\b)(?=.* \b{act}\b).*$"""

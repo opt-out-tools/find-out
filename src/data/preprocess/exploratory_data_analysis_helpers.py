@@ -1,5 +1,6 @@
 import re
 
+import networkx as nx
 import pandas as pd
 
 
@@ -67,24 +68,6 @@ def density_of_curse_words_in_sentence(tweet):
     return counts
 
 
-def test_density_of_curse_words_in_sentence():
-    tweet = (
-        "fuck shit ass bitch nigga hell whore dick piss pussy slut puta tit damn "
-        "fag cunt cum cock blowjob"
-    )
-    assert all(density_of_curse_words_in_sentence(tweet))
-
-
-def test_density_of_curse_words_with_puncuation():
-    tweet = "fuck!! fuck, fuck. "
-    assert density_of_curse_words_in_sentence(tweet)["fuck"] == 0
-
-
-def test_density_of_curse_words_with_plurals():
-    tweet = "fucks fucks fucks fuck"
-    assert density_of_curse_words_in_sentence(tweet)["fuck"] == 1.0
-
-
 def density_of_curse_words_in_total_corpus(dataframe, dataset_title):
     """Returns density of curse words across an entire corpus
 
@@ -124,23 +107,9 @@ def generate_ngrams(tweet, ngram_number):
     ngrams = zip(*[tokens[i:] for i in range(ngram_number)])
     return [" ".join(ngram) for ngram in ngrams]
 
-
-def find_most_common_nouns(docs):
-    """Returns a descending order sorted list of nouns and their frequencies.
-
-    Args:
-        docs (list of spacy docs) : a list of spacy doc obects.
-
-    Return:
-        sorted (list of tuples): the word and its count.
-
-    """
-    nouns = [str(chunk) for doc in docs for chunk in doc.noun_chunks]
-
-    frequencies = [(word, nouns.count(word)) for word in set(nouns)]
-
-    return sorted(set(frequencies), key=lambda x: x[1], reverse=True)
-
+def tweet_legnth(data):
+    data['tweet_length'] = data["text"].apply(lambda tweet: len(tweet))
+    return data.groupby('label').mean()['tweet_length']
 
 def contains_bigram(ngram, adjectives, nouns):
     """Returns the bigrams that match the two regex patterns, adjectives and nouns."""
@@ -174,3 +143,58 @@ def count_pejorative_bigrams(bigrams):
             counts.append((bigrams_counts[j].index.values[i], count))
 
     return counts
+
+
+def find_most_common_nouns(docs):
+    """Returns a descending order sorted list of nouns and their frequencies.
+
+    Args:
+        docs (list of spacy docs) : a list of spacy doc obects.
+
+    Return:
+        sorted (list of tuples): the word and its count.
+
+    """
+    nouns = [str(chunk) for doc in docs for chunk in doc.noun_chunks]
+
+    frequencies = [(word, nouns.count(word)) for word in set(nouns)]
+
+    return sorted(set(frequencies), key=lambda x: x[1], reverse=True)
+
+
+def part_of_speech_frequency(docs):
+    tags = [token.tag_ for doc in docs for token in doc]
+    frequencies = [(word, tags.count(word)) for word in set(tags)]
+    return sorted(set(frequencies), key=lambda x: x[1], reverse=True)
+
+def spacy_generate_bigrams(docs):
+    for doc in docs:
+        for noun_phrase in list(doc.noun_chunks):
+          noun_phrase.merge(noun_phrase.root.tag_, noun_phrase.root.lemma_, noun_phrase.root.ent_type_)
+
+
+def load_deptree_into_graph(tweet):
+    edges = []
+    for token in tweet:
+        for child in token.children:
+            edges.append((f'{token.lower_}',
+                          f'{child.lower_}'))
+    return nx.Graph(edges)
+
+
+def syntactic_dependency_frequency(docs):
+    tags = [token.dep_ for doc in docs for token in doc]
+    frequencies = [(word, tags.count(word)) for word in set(tags)]
+    return sorted(set(frequencies), key=lambda x: x[1], reverse=True)
+
+
+def compare(function, misogynistic_docs, non_misogynistic_docs):
+    misogyny = pd.DataFrame(function(misogynistic_docs),
+                                columns=[function, 'count'])
+    non_misogyny = pd.DataFrame(part_of_speech_frequency(non_misogynistic_docs),
+                                 columns=[function, 'count'])
+
+    top_10_misogynistic = misogyny.loc[0:10, :]
+    top_10_non_misogynistic = non_misogyny.loc[0:10, :]
+    return top_10_misogynistic, top_10_non_misogynistic
+

@@ -3,9 +3,21 @@ import os
 
 import numpy as np
 import pandas as pd
+import spacy
 
 CURRENT_DIRECTORY = os.getcwd()
+NLP = spacy.load("en_core_web_md")
 
+
+def create_spacy_docs(data, label):
+    """ Returns a dataframe of spacy docs
+    Args:
+
+    Returns:
+
+    """
+
+    return data[label].apply(lambda x: NLP(x))
 
 def save_embeddings(model, word_index):
     """Writes two files to the current working directory containing the word

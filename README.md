@@ -1,7 +1,7 @@
 find-out
 ==============================
 
-Find Out is an the sister project to the open source project Opt Out. It is here to enable the study of different machine learning models and their ability to classify sexual harassment text. The project organization is below.
+Find Out is the sister project to the open source project Opt Out. It is here to enable the study of different machine learning models and their ability to classify sexual harassment text. The project organization is below.
 
 Project Organization
 --------------------

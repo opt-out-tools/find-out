@@ -2,7 +2,7 @@
 
 from keras.preprocessing.text import Tokenizer
 
-samples = # read in tabular data from hatespeech and link to abraham and join as one dataframe
+samples = # read in tabular data from hatespeech and stanford and join as one dataframe
 
 tokenizer = Tokenizer(num_words = 1000)
 tokenizer.fit_on_texts(samples)

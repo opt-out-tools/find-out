@@ -86,3 +86,8 @@ dataturks - obtained from dataturks crowdsource labeling
 hatespeech - obtained from Zeerak Waseem. 
 rapeglish - scraped from random rape threat generator by Emma Jane
 ```
+
+Requirements
+--------------------
+For any conda users, create a new env, `cd` to the find-out dir and run the following command:
+`while read requirement; do conda install --yes $requirement; done < requirements.txt`

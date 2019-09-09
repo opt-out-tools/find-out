@@ -19,6 +19,7 @@ def create_spacy_docs(data, label):
 
     return data[label].apply(lambda x: NLP(x))
 
+
 def save_embeddings(model, word_index):
     """Writes two files to the current working directory containing the word
     embeddings and labels.

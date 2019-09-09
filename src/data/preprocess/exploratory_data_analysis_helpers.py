@@ -1,7 +1,9 @@
 import re
 
 import networkx as nx
+import numpy as np
 import pandas as pd
+from spacy.symbols import VERB
 
 
 def density_of_curse_words_in_sentence(tweet):
@@ -107,9 +109,11 @@ def generate_ngrams(tweet, ngram_number):
     ngrams = zip(*[tokens[i:] for i in range(ngram_number)])
     return [" ".join(ngram) for ngram in ngrams]
 
+
 def tweet_legnth(data):
-    data['tweet_length'] = data["text"].apply(lambda tweet: len(tweet))
-    return data.groupby('label').mean()['tweet_length']
+    data["tweet_length"] = data["text"].apply(lambda tweet: len(tweet))
+    return data.groupby("label").mean()["tweet_length"]
+
 
 def contains_bigram(ngram, adjectives, nouns):
     """Returns the bigrams that match the two regex patterns, adjectives and nouns."""
@@ -138,12 +142,14 @@ def count_pejorative_bigrams(bigrams):
     """
     bigrams_counts = [bigrams[i].value_counts() for i in range(0, len(bigrams))]
     counts = []
-    for j in enumerate(bigrams_counts):
+    for j in range(0, len(bigrams_counts)):
         for i, count in enumerate(bigrams_counts[j]):
             counts.append((bigrams_counts[j].index.values[i], count))
 
     return counts
 
+
+#### ALL BELOW REQUIRE SPACY DOCS
 
 def find_most_common_nouns(docs):
     """Returns a descending order sorted list of nouns and their frequencies.
@@ -167,18 +173,22 @@ def part_of_speech_frequency(docs):
     frequencies = [(word, tags.count(word)) for word in set(tags)]
     return sorted(set(frequencies), key=lambda x: x[1], reverse=True)
 
+
 def spacy_generate_bigrams(docs):
     for doc in docs:
         for noun_phrase in list(doc.noun_chunks):
-          noun_phrase.merge(noun_phrase.root.tag_, noun_phrase.root.lemma_, noun_phrase.root.ent_type_)
+            noun_phrase.merge(
+                noun_phrase.root.tag_,
+                noun_phrase.root.lemma_,
+                noun_phrase.root.ent_type_,
+            )
 
 
 def load_deptree_into_graph(tweet):
     edges = []
     for token in tweet:
         for child in token.children:
-            edges.append((f'{token.lower_}',
-                          f'{child.lower_}'))
+            edges.append((f"{token.lower_}", f"{child.lower_}"))
     return nx.Graph(edges)
 
 
@@ -190,11 +200,34 @@ def syntactic_dependency_frequency(docs):
 
 def compare(function, misogynistic_docs, non_misogynistic_docs):
     misogyny = pd.DataFrame(function(misogynistic_docs),
-                                columns=[function, 'count'])
-    non_misogyny = pd.DataFrame(part_of_speech_frequency(non_misogynistic_docs),
-                                 columns=[function, 'count'])
+                            columns=[function.__name__, "count"])
+    non_misogyny = pd.DataFrame(
+        function(non_misogynistic_docs), columns=[function.__name__, "count"]
+    )
 
     top_10_misogynistic = misogyny.loc[0:10, :]
     top_10_non_misogynistic = non_misogyny.loc[0:10, :]
     return top_10_misogynistic, top_10_non_misogynistic
 
+
+def verb_noun_syntactic_relation(docs, noun):
+    verbs = set()
+    for doc in docs:
+        for possible_subject in doc:
+            if possible_subject.dep == noun and possible_subject.head.pos == VERB:
+                verbs.add((possible_subject.text, possible_subject.head))
+    return verbs
+
+
+def verb_noun_word_vectors(docs, noun):
+    verb_vectors = np.empty([len(docs), 300])
+    verbs = np.chararray((len(docs), 1), unicode=True, itemsize=50)
+    nouns = np.chararray((len(docs), 1), unicode=True, itemsize=50)
+
+    for number, doc in enumerate(docs):
+        for possible_subject in doc:
+            if possible_subject.dep == noun and possible_subject.head.pos == VERB:
+                verb_vectors[number, :] = possible_subject.head.vector
+                nouns[number, :] = possible_subject.text
+                verbs[number, :] = possible_subject.head
+    return verb_vectors, verbs, nouns

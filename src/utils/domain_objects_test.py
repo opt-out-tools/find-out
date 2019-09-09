@@ -46,6 +46,9 @@ def create_tweets_with_labels_df():
         "@femfreq #FemiNazi #Gamergate &amp; @MomsAgainstWWE #ParanoidParent "
         "http://t.câ€¦",
     ]
-    return pd.DataFrame({"text": tweets,
-                         "label": pd.Series([1 if number % 2 == 0 else 0
-                                             for number in range(0,5)])})
+    return pd.DataFrame(
+        {
+            "text": tweets,
+            "label": pd.Series([1 if number % 2 == 0 else 0 for number in range(0, 5)]),
+        }
+    )

@@ -78,10 +78,11 @@ NB. this is not a permanent solution but will enable initial effective collabora
 
 Project Datasets
 --------------------
-The text must be under the column head **text** and the labels under the column head **label**.
+The text must be under the column head **text** and the labels under the column head **label**. 
+Misogynistic or harassing is always 1 and not 0.
 ```
 aws_annotated - our annotations + hatespeech
 dataturks - obtained from dataturks crowdsource labeling
-hatespeech - obtained from Zeerak Waseem
+hatespeech - obtained from Zeerak Waseem. 
 rapeglish - scraped from random rape threat generator by Emma Jane
 ```

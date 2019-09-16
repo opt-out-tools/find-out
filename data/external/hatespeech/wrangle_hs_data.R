@@ -25,8 +25,8 @@ sexism <- jsonlite::stream_in(file("sexism.json"),
 # amateur_expert -------------------
 
 # Make tibble then select and rename columns to match AWS scripts
-amateur_expert <- amateur_expert %>% 
-  as_tibble() %>% 
+amateur_expert <- amateur_expert %>%
+  as_tibble() %>%
   select(annotation = "Annotation",
          created_at,
          user_id = "user.id_str",
@@ -43,10 +43,10 @@ amateur_expert <- amateur_expert %>%
          retweet_favorite_count = "retweeted_status.favorite_count")
 
 # Drop racism annotations and convert "both" to "sexism"
-amateur_expert <- amateur_expert %>% 
-  filter(annotation == "Both"   | 
-         annotation == "Sexism" | 
-         annotation == "Neither") %>% 
+amateur_expert <- amateur_expert %>%
+  filter(annotation == "Both"   |
+         annotation == "Sexism" |
+         annotation == "Neither") %>%
   mutate(annotation = replace(annotation,
                               annotation == "Both",
                               "Sexism"))
@@ -54,8 +54,8 @@ amateur_expert <- amateur_expert %>%
 # neither --------------------------
 
 # Make tibble then select and rename columns to match AWS scripts
-neither <- neither %>% 
-  as_tibble() %>% 
+neither <- neither %>%
+  as_tibble() %>%
   select(annotation = "Annotation",
          created_at,
          user_id = "user.id_str",
@@ -70,12 +70,12 @@ neither <- neither %>%
          retweet_status_id = "retweeted_status.id",
          favorite_count,
          retweet_favorite_count = "retweeted_status.favorite_count")
-  
+
 # sexism ---------------------------
 
 # Make tibble then select and rename columns to match AWS scripts
-sexism <- sexism %>% 
-  as_tibble() %>% 
+sexism <- sexism %>%
+  as_tibble() %>%
   select(annotation = "Annotation",
          created_at,
          user_id = "user.id_str",
@@ -96,16 +96,16 @@ sexism <- sexism %>%
 
 # Combine data, then rename annotations, then remove duplicates
 zeerack_data <- bind_rows(amateur_expert, neither, sexism) %>%
-  mutate(annotation = replace(annotation, annotation == "Neither", "not_misogynistic")) %>% 
-  mutate(annotation = replace(annotation, annotation == "none", "not_misogynistic")) %>% 
-  mutate(annotation = replace(annotation, annotation == "sexism", "misogynistic")) %>% 
-  mutate(annotation = replace(annotation, annotation == "Sexism", "misogynistic")) %>% 
+  mutate(annotation = replace(annotation, annotation == "Neither", "not_misogynistic")) %>%
+  mutate(annotation = replace(annotation, annotation == "none", "not_misogynistic")) %>%
+  mutate(annotation = replace(annotation, annotation == "sexism", "misogynistic")) %>%
+  mutate(annotation = replace(annotation, annotation == "Sexism", "misogynistic")) %>%
   arrange(annotation) %>%
   distinct(status_id, .keep_all = TRUE)
 
 # Balance label classes by taking random sample of not_misogynistic Tweets
-zeerack_data <- zeerack_data %>% 
-  group_by(annotation) %>% 
+zeerack_data <- zeerack_data %>%
+  group_by(annotation) %>%
   sample_n(4242) %>%
   ungroup()
 
@@ -114,4 +114,4 @@ zeerack_data <- zeerack_data %>%
 # ==================================
 
 # Save to csv
-write_csv(zeerack_data, "zeerack_data.csv")
+write_csv(zeerack_data, "hs_data.csv")

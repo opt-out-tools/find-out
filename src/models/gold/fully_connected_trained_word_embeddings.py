@@ -118,15 +118,15 @@ plt.show()
 # Retrain model
 # =========================
 model = models.Sequential()
-model.add(layers.Dense(16, activation = 'relu', input_shape = (10000,)))
-model.add(layers.Dense(16, activation = 'relu'))
+model.add(layers.Embedding(10000, 8, input_length = data.shape[1]))
+model.add(layers.Flatten())
 model.add(layers.Dense(1, activation = 'sigmoid'))
 
 model.compile(optimizer = 'rmsprop',
               loss = 'binary_crossentropy',
               metrics=[km.binary_precision(), km.binary_recall()])
 
-model.fit(x_train, y_train, epochs = 5, batch_size = 512)
+model.fit(x_train, y_train, epochs = 20, batch_size = 512)
 
 # =========================
 # Evaluate on test data

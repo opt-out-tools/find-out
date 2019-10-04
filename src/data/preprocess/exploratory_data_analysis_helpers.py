@@ -8,7 +8,7 @@ from spacy.symbols import VERB
 
 def density_of_curse_words_in_sentence(tweet):
     """Returns the density of top 20 curse words, taken from Wang, Wenbo,  et  al.
-    "Cursing  in englishon  twitter."
+    Cursing  in english on  twitter."
     The method needs the punctuation to be removed.
     Args:
         tweet (str) : the tweet to be counted.
@@ -161,7 +161,7 @@ def find_most_common_nouns(docs):
         sorted (list of tuples): the word and its count.
 
     """
-    nouns = [str(chunk) for doc in docs for chunk in doc.noun_chunks]
+    nouns = [str(chunk).strip() for doc in docs for chunk in doc.noun_chunks]
 
     frequencies = [(word, nouns.count(word)) for word in set(nouns)]
 

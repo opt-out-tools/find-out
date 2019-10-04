@@ -13,4 +13,4 @@ notebooks/hatespeech/.ipynb_checkpoints/
 notebooks/hatespeech/runs/
 runs/
 reports/hatespeech/figures/
-
+data/benchmark/gold/

@@ -1,7 +1,6 @@
 import pandas as pd
 
-from src.utils.domain_objects_test import create_tokenized_tweets_df
-from src.utils.domain_objects_test import create_tweets_df
+from tests.test_data.tweet_objects import create_tokenized_tweets_df
 from src.utils.preprocess_text_helpers import contractions_unpacker
 from src.utils.preprocess_text_helpers import escape_unicode
 from src.utils.preprocess_text_helpers import lowercase
@@ -12,8 +11,8 @@ from src.utils.preprocess_text_helpers import replace_spaces
 from src.utils.preprocess_text_helpers import tokenizer
 from src.utils.stopwords_and_contractions import contractions
 
-TWEETS = create_tweets_df()
-TOKENIZED_TWEETS = create_tokenized_tweets_df()
+
+TOKENIZED_tweets = create_tokenized_tweets_df()
 
 CONTRACTIONS_DATAFRAME = pd.DataFrame(
     {
@@ -33,10 +32,10 @@ def test_contraction_unpacking_all():
     )
 
 
-def test_contraction_unpack_in_sentence():
-    TWEETS["contractions"] = TWEETS["text"].apply(contractions_unpacker)
+def test_contraction_unpack_in_sentence(tweets):
+    tweets["contractions"] = tweets["text"].apply(contractions_unpacker)
     assert (
-        TWEETS.loc[3, "contractions"]
+        tweets.loc[3, "contractions"]
         == "RT @baum_erik: Lol I am not surprised these 2 accounts blocked me "
         "@femfreq #FemiNazi #Gamergate &amp; @MomsAgainstWWE "
         "#ParanoidParent http://t.câ€¦"
@@ -70,7 +69,7 @@ def test_social_tokenizer():
 
 def test_punctuation_cleaner_removes_colon():
     assert (
-        punctuation_cleaner(TOKENIZED_TWEETS.loc[0, "text"])
+        punctuation_cleaner(TOKENIZED_tweets.loc[0, "text"])
         == "RT @asredasmyhair Feminists take note #FemFreeFriday "
         "#WomenAgainstFeminism http://t.co/J2HqzVJ8Cx"
     )
@@ -78,7 +77,7 @@ def test_punctuation_cleaner_removes_colon():
 
 def test_punctuation_cleaner_removes_fullstops():
     assert (
-        punctuation_cleaner(TOKENIZED_TWEETS.loc[2, "text"])
+        punctuation_cleaner(TOKENIZED_tweets.loc[2, "text"])
         == "@MGTOWKnight @FactsVsOpinion cue the NAFALT in 3 2 1"
     )
 
@@ -95,17 +94,17 @@ def test_punctuation_cleaner_removes_exclamation_marks():
 
 def test_lowercase():
     assert (
-        lowercase(TOKENIZED_TWEETS.loc[2, "text"])
+        lowercase(TOKENIZED_tweets.loc[2, "text"])
         == "@mgtowknight @factsvsopinion . . . "
         "cue the nafalt in 3 . . 2 . . . 1 . "
         ". ."
     )
 
 
-def test_normalize():
-    TWEETS["normalized"] = normalizer(TWEETS["text"])
+def test_normalize(tweets):
+    tweets["normalized"] = normalizer(tweets["text"])
     assert (
-        TWEETS.loc[0, "normalized"]
+        tweets.loc[0, "normalized"]
         == "RT <user> : Feminists, take note. <hashtag> <hashtag> <url>"
     )
 

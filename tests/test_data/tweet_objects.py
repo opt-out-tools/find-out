@@ -49,6 +49,6 @@ def create_tweets_with_labels_df():
     return pd.DataFrame(
         {
             "text": tweets,
-            "label": pd.Series([1 if number % 2 == 0 else 0 for number in range(0, 5)]),
+            "label": pd.Series([1 if number % 2 == 0 else 0 for number in range(0, 4)]),
         }
     )

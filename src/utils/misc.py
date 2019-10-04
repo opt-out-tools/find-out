@@ -10,12 +10,7 @@ NLP = spacy.load("en_core_web_md")
 
 
 def create_spacy_docs(data, label):
-    """ Returns a dataframe of spacy docs
-    Args:
-
-    Returns:
-
-    """
+    """ Returns a dataframe of spacy docs."""
 
     return data[label].apply(lambda x: NLP(x))
 
@@ -67,24 +62,6 @@ def is_correctly_labelled(scores, target_labels):
     hits_array = np.array(target_labels) == np.array(dataframe["label"].values)
 
     return round(float(np.sum(hits_array)) / len(target_labels) * 100, 2)
-
-
-def test_is_cyber_bullying():
-    score = np.array([0.6], dtype=float)
-    target = np.array([1.0], dtype=float)
-    assert is_correctly_labelled(score, target) == 100
-
-
-def test_is_not_cyber_bullying():
-    score = np.array([0.49], dtype=float)
-    target = np.array([0.0], dtype=float)
-    assert is_correctly_labelled(score, target) == 100
-
-
-def test_boundary_test():
-    score = np.array([0.5], dtype=float)
-    target = np.array([1.0], dtype=float)
-    assert is_correctly_labelled(score, target) == 100
 
 
 def convert_json_to_csv(read_filename, write_filename):

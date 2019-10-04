@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+import seaborn as sns
 
 
 def plot_word_vectors(word_vectors, words, ax):
@@ -16,3 +17,4 @@ def plot_word_vectors(word_vectors, words, ax):
         ax.text(X, Y, word[0], size=15)
 
     return ax
+

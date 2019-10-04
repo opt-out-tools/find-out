@@ -41,7 +41,7 @@ def plot_two_barcharts(first_dataset, second_dataset, filepath, rotate_ticks=Tru
 
     return fig, ax
 
-def create_axis_object(fig, ax):
+def format_axis(ax):
     # First, let's remove the top, right and left spines (figure borders)
     # which really aren't necessary for a bar chart.
     # Also, make the bottom spine gray instead of black.
@@ -59,6 +59,5 @@ def create_axis_object(fig, ax):
     ax.yaxis.grid(True, color='#EEEEEE')
     ax.xaxis.grid(False)
 
-    fig.tight_layout()
 
-    return fig, ax
+    return ax

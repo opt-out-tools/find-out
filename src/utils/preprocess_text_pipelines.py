@@ -6,6 +6,7 @@ from src.utils.preprocess_text_helpers import (
     remove_stopwords,
     normalizer,
     punctuation_cleaner,
+    lowercase,
 )
 
 
@@ -39,6 +40,7 @@ def clean(dataframe):
     pipeline.register_processor(tokenizer)
     pipeline.register_processor(punctuation_cleaner)
     pipeline.register_processor(remove_stopwords)
+    pipeline.register_processor(lowercase)
 
     dataframe["cleaned"] = dataframe["text"].apply(pipeline.process_text)
     return dataframe
@@ -60,6 +62,7 @@ def normalize(dataframe):
     pipeline.register_processor(tokenizer)
     pipeline.register_processor(punctuation_cleaner)
     pipeline.register_processor(remove_stopwords)
+    pipeline.register_processor(lowercase)
 
     dataframe["cleaned"] = dataframe["text"].apply(pipeline.process_text)
     dataframe["normalized"] = normalizer(dataframe["cleaned"])
@@ -80,6 +83,7 @@ def tokenize(dataframe):
     pipeline = TextPipeline()
     pipeline.register_processor(contractions_unpacker)
     pipeline.register_processor(tokenizer)
+    pipeline.register_processor(lowercase)
 
     dataframe["tokenized"] = dataframe["text"].apply(pipeline.process_text)
     return dataframe

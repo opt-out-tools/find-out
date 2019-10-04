@@ -3,20 +3,20 @@ from src.utils.preprocess_text_pipelines import normalize, clean, tokenize
 def test_normalize(tweets):
     assert (
         normalize(tweets).loc[0, "normalized"]
-        == "RT <user> Feminists take note <hashtag> "
+        == "rt <user> feminists take note <hashtag> "
         "<hashtag> <url>"
     )
     assert (
         normalize(tweets).loc[1, "normalized"]
-        == "RT <user> Antis stop treating blocks "
+        == "rt <user> antis stop treating blocks "
         "trophies soon feminists stop treating "
-        "blocks arguments đŸ \uf190 ¸ â ˜ • "
+        "blocks arguments đÿ \uf190 ¸ â ˜ • "
         "<hashtag>"
     )
-    assert normalize(tweets).loc[2, "normalized"] == "<user> <user> cue NAFALT 3 2 1"
+    assert normalize(tweets).loc[2, "normalized"] == "<user> <user> cue nafalt 3 2 1"
     assert (
         normalize(tweets).loc[3, "normalized"]
-        == "RT <user> Lol I surprised 2 accounts "
+        == "rt <user> lol i surprised 2 accounts "
         "blocked <user> <hashtag> <hashtag> & "
         "<user> <hashtag> <url>"
     )
@@ -24,52 +24,45 @@ def test_normalize(tweets):
 
 def test_clean(tweets):
     assert (
-        clean(tweets).loc[0, "cleaned"] == "RT @asredasmyhair Feminists take note "
-        "#FemFreeFriday #WomenAgainstFeminism "
-        "http://t.co/J2HqzVJ8Cx"
+        clean(tweets).loc[0, "cleaned"] == "rt @asredasmyhair feminists take note #femfreefriday #womenagainstfeminism http://t.co/j2hqzvj8cx"
+
     )
     assert (
-        clean(tweets).loc[1, "cleaned"] == "RT @AllstateJackie Antis stop treating "
-        "blocks trophies soon feminists stop "
-        "treating blocks arguments đŸ \uf190 ¸ â ˜ • "
-        ""
-        "#GamerGate"
+        clean(tweets).loc[1, "cleaned"] == 'rt @allstatejackie antis stop treating blocks trophies soon feminists stop '
+ 'treating blocks arguments đÿ \uf190 ¸ â ˜ • #gamergate'
     )
     assert (
         clean(tweets).loc[2, "cleaned"]
-        == "@MGTOWKnight @FactsVsOpinion cue NAFALT 3 2 1"
+        == "@mgtowknight @factsvsopinion cue nafalt 3 2 1"
     )
     assert (
-        clean(tweets).loc[3, "cleaned"] == "RT @baum_erik Lol I surprised 2 accounts "
-        "blocked @femfreq #FemiNazi #Gamergate & "
-        "@MomsAgainstWWE #ParanoidParent "
-        "http://t.câ€¦"
+        clean(tweets).loc[3, "cleaned"] == "rt @baum_erik lol i surprised 2 accounts blocked @femfreq #feminazi #gamergate & @momsagainstwwe #paranoidparent http://t.câ€¦"
     )
 
 
 def test_tokenize(tweets):
     assert (
         tokenize(tweets).loc[0, "tokenized"]
-        == "RT @asredasmyhair : Feminists , take note "
+        == "rt @asredasmyhair : feminists , take note "
         ""
-        ". #FemFreeFriday #WomenAgainstFeminism "
-        "http://t.co/J2HqzVJ8Cx"
+        ". #femfreefriday #womenagainstfeminism "
+        "http://t.co/j2hqzvj8cx"
     )
     assert (
-        tokenize(tweets).loc[1, "tokenized"] == "RT @AllstateJackie : Antis will stop "
+        tokenize(tweets).loc[1, "tokenized"] == "rt @allstatejackie : antis will stop "
         "treating blocks as trophies as soon as "
         "feminists stop treating blocks as "
-        "arguments . đŸ \uf190 ¸ â ˜ • #GamerGate"
+        "arguments . đÿ \uf190 ¸ â ˜ • #gamergate"
     )
     assert (
         tokenize(tweets).loc[2, "tokenized"]
-        == "@MGTOWKnight @FactsVsOpinion . . . cue "
-        "the NAFALT in 3 . . 2 . . . 1 . . ."
+        == "@mgtowknight @factsvsopinion . . . cue "
+        "the nafalt in 3 . . 2 . . . 1 . . ."
     )
     assert (
         tokenize(tweets).loc[3, "tokenized"]
-        == "RT @baum_erik : Lol I am not surprised "
+        == "rt @baum_erik : lol i am not surprised "
         "these 2 accounts blocked me @femfreq "
-        "#FemiNazi #Gamergate & @MomsAgainstWWE "
-        "#ParanoidParent http://t.câ€¦"
+        "#feminazi #gamergate & @momsagainstwwe "
+        "#paranoidparent http://t.câ€¦"
     )

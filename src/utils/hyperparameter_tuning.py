@@ -1,3 +1,8 @@
+"""
+This file is an example, sadly not reusable yet
+"""
+
+
 from hyperopt import STATUS_OK
 from hyperas.distributions import choice
 from hyperopt import Trials, tpe
@@ -11,21 +16,28 @@ import src.data.preprocess.dataturks.generate_nn_dataturks as preprocess
 from keras.layers.core import Dense, Dropout, Activation
 from keras.models import Sequential
 
+
 def data():
     data = pd.read_csv("../../data/external/dataturks/example.csv")
-    dictionary = preprocess.create_dictionary(data['content'], 10000)
+    dictionary = preprocess.create_dictionary(data['text'], 10000)
     X_train_split, X_test_split = preprocess.split(data)
     y_train = X_train_split['label'].values
     y_test = X_test_split['label'].values
 
-    x_train = keras.preprocessing.sequence.pad_sequences(dictionary.texts_to_sequences(X_train_split['content'].values), padding='post', maxlen=140)
-    x_test = keras.preprocessing.sequence.pad_sequences(dictionary.texts_to_sequences(X_test_split['content'].values), padding='post', maxlen=140)
-    return x_train, x_test, y_train, y_test
+    x_train = keras.preprocessing.sequence.pad_sequences(dictionary.texts_to_sequences(X_train_split['text'].values), padding='post', maxlen=140)
+    x_test = keras.preprocessing.sequence.pad_sequences(dictionary.texts_to_sequences(X_test_split['text'].values), padding='post', maxlen=140)
+    return x_train, y_train, x_test, y_test
 
-def create_model(x_train, y_train, x_test, y_test):
-    """Returns the sentiment of the parsed sentence.
+def create_model(x_train, y_train):
+    """
+    Model providing function:
 
-
+    Create Keras model with double curly brackets dropped-in as needed.
+    Return value has to be a valid python dictionary with two customary keys:
+        - loss: Specify a numeric evaluation metric to be minimized
+        - status: Just use STATUS_OK and see hyperopt documentation if not feasible
+    The last one is optional, though recommended, namely:
+        - model: specify the model just created so that we can later use it again.
     """
 
     model = Sequential()
@@ -35,15 +47,6 @@ def create_model(x_train, y_train, x_test, y_test):
     model.add(Dense({{choice([256, 512, 1024])}}))
     model.add(Activation({{choice(['relu', 'sigmoid'])}}))
     model.add(Dropout({{uniform(0, 1)}}))
-
-    # If we choose 'four', add an additional fourth layer
-    # if {{choice(['three', 'four'])}} == 'four':
-    #     model.add(Dense(100))
-    #
-    #     # We can also choose between complete sets of layers
-    #
-    #     model.add({{choice([Dropout(0.5), Activation('linear')])}})
-    #     model.add(Activation('relu'))
 
     model.add(Dense(1))
     model.add(Activation('softmax'))
@@ -67,7 +70,7 @@ if __name__ == '__main__':
                                           algo=tpe.suggest,
                                           max_evals=5,
                                           trials=Trials(), verbose=True, keep_temp=True)
-    X_train, Y_train, X_test, Y_test = data()
+    X_train, Y_train, X_test, Y_test = data(path)
     print("Evalutation of best performing model:")
     print(best_model.evaluate(X_test, Y_test))
     print("Best performing model chosen hyper-parameters:")

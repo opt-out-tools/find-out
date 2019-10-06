@@ -32,8 +32,8 @@ def predict(sentence, path_to_model, path_to_data, text_column_name, vocab_size)
 
     corpus_vocabulary = create_dictionary(data[text_column_name], vocab_size)
 
-    parsed_test = pd.DataFrame({"content": pd.Series(sentence)})
-    x_test = parsed_test["content"]
+    parsed_test = pd.DataFrame({"text": pd.Series(sentence)})
+    x_test = parsed_test["text"]
 
     test_sequences = corpus_vocabulary.texts_to_sequences(x_test.values)
 

@@ -5,8 +5,8 @@ from src.data.preprocess.exploratory_data_analysis_helpers import (
     density_of_curse_words_in_sentence,
 )
 from src.data.preprocess.exploratory_data_analysis_helpers import find_most_common_nouns
-from src.utils.domain_objects_test import create_tweets_df
 from src.utils.misc import create_spacy_docs
+from .utils.domain_objects_test import create_tweets_df
 
 NLP = spacy.load("en_core_web_md")
 TWEETS = create_tweets_df()

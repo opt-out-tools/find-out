@@ -117,3 +117,10 @@ python -m spacy download en_core_web_md
 ```bash
 pre-commit install
 ```
+
+## Tests
+
+Tests should be run from the root directory as
+```bash
+python -m pytest
+```

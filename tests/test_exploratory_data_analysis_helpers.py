@@ -11,7 +11,7 @@ from src.utils.misc import create_spacy_docs
 NLP = spacy.load("en_core_web_md")
 TWEETS = create_tweets_df()
 TWEETS["label"] = pd.Series([1 for _ in range(0, 5)])
-DOCS = create_spacy_docs(TWEETS, "text", True)
+DOCS = create_spacy_docs(TWEETS, "text")
 
 
 def test_find_most_common_nouns():

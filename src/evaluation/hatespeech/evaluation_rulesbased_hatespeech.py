@@ -1,7 +1,8 @@
 import numpy as np
 from metal.analysis import lf_summary
 from scipy import sparse
-from torch.utils.tensorboard import SummaryWriter
+
+# from torch.utils.tensorboard import SummaryWriter
 
 
 def make_learning_function_matrix(data, labeling_functions):
@@ -90,7 +91,6 @@ def analysis_of_weak_labeling(
         Displays a summary of the labeling function's success on the
         text.
     """
-    SummaryWriter()
     labeling_function_matrix = make_learning_function_matrix(data, labeling_functions)
 
     generator_labeling_function_matrix = np.empty((len(data), 1))

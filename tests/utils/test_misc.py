@@ -9,4 +9,4 @@ TWEETS = create_tweets_with_labels_df()
 
 def test_create_spacy_docs_misogynistic():
     docs = create_spacy_docs(TWEETS, "text")
-    assert len(docs) == 5
+    assert len(docs) == 4

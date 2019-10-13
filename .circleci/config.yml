@@ -45,6 +45,12 @@ jobs:
       # https://pytest.org
       # https://nose.readthedocs.io
       - run:
+          name: run pre-commits
+          command: |
+            . venv/bin/activate
+            python -m pre_commit run --all-files
+
+      - run:
           name: run tests
           command: |
             . venv/bin/activate

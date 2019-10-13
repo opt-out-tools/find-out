@@ -6,5 +6,5 @@ setup(
     version="0.1.0",
     description="The facts behind the product",
     author="opt-out",
-    license="",
+    license="GNU AFFERO GPL",
 )

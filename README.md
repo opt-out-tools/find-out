@@ -87,7 +87,33 @@ hatespeech - obtained from Zeerak Waseem.
 rapeglish - scraped from random rape threat generator by Emma Jane
 ```
 
-Requirements
+Installation
 --------------------
-For any conda users, create a new env, `cd` to the find-out dir and run the following command:
-`while read requirement; do conda install --yes $requirement; done < requirements.txt`
+
+### Conda
+
+Create a new Conda environment
+```
+conda create -n find-out python=3.7
+``` 
+and activate it with
+```bash
+conda activate find-out
+```
+Move to the project root directory (e.g. `$ cd find-out/`)
+and run the following command:
+```bash
+pip install -r requirements.txt
+```
+
+### Spacy Model
+
+```bash
+python -m spacy download en_core_web_md
+```
+
+### Pre-commit Hooks
+
+```bash
+pre-commit install
+```

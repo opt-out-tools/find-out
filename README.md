@@ -81,10 +81,13 @@ Project Datasets
 The text must be under the column head **text** and the labels under the column head **label**. 
 Misogynistic or harassing is always 1 and not 0.
 ```
-aws_annotated - our annotations + hatespeech
-dataturks - obtained from dataturks crowdsource labeling
 hatespeech - obtained from Zeerak Waseem. 
+aws_annotated - our annotations + hatespeech
+stanford_hatespeech - stanford (aws_annotated+snorkel labels) + hatespeech
+gold - stanford_hatespeech + AMI
+metoo - tweet ids from https://github.com/datacamp/datacamp-metoo-analysis
 rapeglish - scraped from random rape threat generator by Emma Jane
+dataturks - obtained from dataturks crowdsource labeling
 ```
 
 Installation
@@ -116,4 +119,11 @@ python -m spacy download en_core_web_md
 
 ```bash
 pre-commit install
+```
+
+## Tests
+
+Tests should be run from the root directory as
+```bash
+python -m pytest
 ```

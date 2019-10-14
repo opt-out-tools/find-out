@@ -3,8 +3,8 @@ import pandas as pd
 from src.data.preprocess.dataturks.generate_nn_dataturks import split
 from src.models.dataturks import predict_nn_dataturks as model
 
-PATH_TO_DATA = "../data/external/dataturks/example.csv"
-PATH_TO_MODEL = "../models/example_dataturks.h5"
+PATH_TO_DATA = "data/external/dataturks/example.csv"
+PATH_TO_MODEL = "models/example_dataturks.h5"
 
 
 def test_create_dictionary_vocab_size_is_correct(create_dataset_vocabulary):

@@ -10,7 +10,6 @@ find-out/
 /notebooks/hatespeech/runs/
 /runs/
 /reports/hatespeech/figures/
-Makefile
 target/
 .coverag*
 build/
@@ -22,3 +21,4 @@ target/
 __pycache__/
 *.log
 *.swp
+.pytest_cache

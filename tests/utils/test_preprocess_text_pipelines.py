@@ -1,5 +1,5 @@
 from src.utils.preprocess_text_pipelines import normalize, clean, tokenize
-from src.utils.domain_objects_test import create_tweets_df
+from tests.utils.domain_objects_test import create_tweets_df
 
 TWEETS = create_tweets_df()
 
